@@ -22,7 +22,7 @@ const Hero = () => {
               </div>
             </div>
             <div className="hidden md:flex ml-40 items-center justify-center cursor-pointer">
-              <div className="w-30 h-30 bg-blue-500  rounded-full hover:bg-red-400 hover:rotate-12 transition duration-700 ease-in-out px-16 py-32 text-white text-2xl shadow-2xl shadow-blue-500 hover:shadow-red-300 font-Poppins">
+              <div className="w-30 h-30 bg-gray-800  rounded-full hover:rotate-12 transition duration-300 ease-in-out px-16 py-32 text-white text-2xl shadow-2xl shadow-yellow-500 hover:shadow-yellow-300 font-Poppins">
                 <p>Skip the ❛process❜</p>
                 <p>Lets Meet now ✅</p>
               </div>

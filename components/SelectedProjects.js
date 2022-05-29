@@ -14,29 +14,29 @@ const SelectedProjects = () => {
           <div className="flex flex-col w-full pt-24 pr-12 space-y-4 md:pr-16 md:w-1/3">
             <div className="relative pt-4 border-b border-gray-900 pb-7 before:absolute before:border-b before:border-gray-500 before:bottom-0 before:w-3/4 before:-mb-px">
               <h3 className="text-xl font-medium text-black font-Poppins">
-                Netflix with Next Js and Stripe Payments
+                Netflix with Next Js and Stripe Payments ✅
               </h3>
               <p className="pt-4 text-sm leading-relaxed text-gray-700">
-                Dont wait on the network. Well cache everything and
-                automatically subscribe clients to changes.
+                Server Side Rendering with Next Js and Stripe Payment
+                Intergration with Subscriptions
               </p>
             </div>
             <div className="pt-4 border-b border-gray-900 pb-7">
               <h3 className="text-xl font-medium text-black font-Poppins">
-                Save instantly to a local DB
+                Fetching Movies with API ✅
               </h3>
               <p className="pt-4 text-sm leading-relaxed text-gray-700">
-                Make your app feel native. Make it faster and work offline. Our
-                consistency mechanisms make offline transactions as easy as
-                transacting to a central cloud database.
+                Used TMDB Api for fetching movies and showcasing it on the
+                FrontEnd. Also integrated Authentication for only Stripe Payment
+                Users.
               </p>
             </div>
             <div className="pt-4 border-b border-gray-900 pb-7">
               <h3 className="text-xl font-medium text-black font-Poppins">
-                Sync data across devices and between users
+                Responsive UI with Tailwind CSS ✅
               </h3>
               <p className="pt-4 text-sm leading-relaxed text-gray-700">
-                Homebase keeps your local and cloud data in snc. No API needed.
+                Built responsive UI with Tailwind CSS for All screen sizes
               </p>
             </div>
           </div>

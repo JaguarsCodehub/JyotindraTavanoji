@@ -1,9 +1,10 @@
 import React from "react";
+import Image from "next/image";
 
 const Quote = () => {
   return (
     <div className="w-full bg-gray-200">
-      <section className="bg-white pt-7 pb-14">
+      <section className="bg-gray-200 pt-7 pb-14">
         <div className="container px-8 mx-auto sm:px-12 lg:px-20">
           <h1 className="text-xl font-Poppins font-semibold tracking-tight mt-10 text-center text-gray-800 mb-7">
             My Tech Stack
@@ -17,8 +18,8 @@ const Quote = () => {
               />
             </div>
             <div className="flex items-center justify-center col-span-6 sm:col-span-4 md:col-span-3 xl:col-span-2">
-              <img
-                src="https://getlogovector.com/wp-content/uploads/2021/01/tailwind-css-logo-vector.png"
+              <Image
+                src={require("../assets/images/tailwind.png")}
                 alt="Google"
                 className="block object-contain h-18"
               />
@@ -33,7 +34,7 @@ const Quote = () => {
 
             <div className="flex items-center justify-center col-span-6 sm:col-span-4 md:col-span-3 xl:col-span-2">
               <img
-                src="https://www.vectorlogo.zone/logos/nodejs/nodejs-ar21.png"
+                src="https://nodejs.org/static/images/logos/nodejs-new-pantone-black.svg"
                 alt="Hubspot"
                 className="block object-contain h-14"
               />
