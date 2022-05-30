@@ -16,46 +16,54 @@ const Hero = () => {
                   FullStack Developer
                 </h1>
                 <p className="font-Poppins ml-30 text-base text-gray-500 sm:max-w-md lg:text-xl md:max-w-3xl">
-                  Its never been easier to build beautiful websites that convey
-                  your message and tell your story. ❤️
+                  Its never been easier to build great applications and websites
+                  that poeple love and talk about them further. ❤️
                 </p>
               </div>
             </div>
             <div className="hidden md:flex ml-40 items-center justify-center cursor-pointer">
               <div className="w-30 h-30 bg-gray-800  rounded-full hover:rotate-12 transition duration-300 ease-in-out px-16 py-32 text-white text-2xl shadow-2xl shadow-yellow-500 hover:shadow-yellow-300 font-Poppins">
-                <p>Skip the ❛process❜</p>
-                <p>Lets Meet now ✅</p>
+                <a href="mailto:jyotindrakt21@gmail.com">
+                  <p>Skip the ❛process❜</p>
+                  <p>Lets Meet now ✅</p>
+                </a>
               </div>
             </div>
             {/* Mobile Hero */}
             <div className="">
               <div className="lg:hidden md:hidden flex rounded-md sm:rounded-xl space-x-8">
                 <div className="w-20 h-20 rounded-full bg-white flex items-center justify-center cursor-pointer hover:scale-125 hover:bg-gray-500 transition duration-200 ease-in-out">
-                  <Image
-                    src="https://cdn-icons-png.flaticon.com/512/25/25231.png"
-                    className="w-8 h-8 rounded-sm"
-                    alt="Github"
-                    width="32px"
-                    height="32px"
-                  />
+                  <a href="https://github.com/JaguarsCodehub/">
+                    <Image
+                      src="https://cdn-icons-png.flaticon.com/512/25/25231.png"
+                      className="w-8 h-8 rounded-sm"
+                      alt="Github"
+                      width="32px"
+                      height="32px"
+                    />
+                  </a>
                 </div>
                 <div className="w-20 h-20 rounded-full bg-blue-200 flex items-center justify-center cursor-pointer hover:scale-125 hover:bg-blue-300 transition duration-200 ease-in-out">
-                  <Image
-                    src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/ca/LinkedIn_logo_initials.png/800px-LinkedIn_logo_initials.png"
-                    className="w-8 h-8 rounded-sm"
-                    alt="LinkedIn"
-                    width="32px"
-                    height="32px"
-                  />
+                  <a href="https://www.linkedin.com/in/jyotindra-tavanoji-41909317a/">
+                    <Image
+                      src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/ca/LinkedIn_logo_initials.png/800px-LinkedIn_logo_initials.png"
+                      className="w-8 h-8 rounded-sm"
+                      alt="LinkedIn"
+                      width="32px"
+                      height="32px"
+                    />
+                  </a>
                 </div>
                 <div className="w-20 h-20 rounded-full bg-red-200 flex items-center justify-center cursor-pointer hover:scale-125 hover:bg-red-200 transition duration-200 ease-in-out">
-                  <Image
-                    src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e7/Instagram_logo_2016.svg/768px-Instagram_logo_2016.svg.png"
-                    className="w-8 h-8 rounded-sm"
-                    alt="Instagram"
-                    width="32px"
-                    height="32px"
-                  />
+                  <a href="https://www.instagram.com/jyotindra.21/">
+                    <Image
+                      src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e7/Instagram_logo_2016.svg/768px-Instagram_logo_2016.svg.png"
+                      className="w-8 h-8 rounded-sm"
+                      alt="Instagram"
+                      width="32px"
+                      height="32px"
+                    />
+                  </a>
                 </div>
               </div>
             </div>

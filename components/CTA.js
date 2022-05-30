@@ -4,14 +4,17 @@ const CTA = () => {
   return (
     <div>
       {/* Desktop */}
-      <div className="hidden md:block max-w-7xl mx-auto">
+      <div id="cta" className="hidden md:block max-w-7xl mx-auto">
         <div className="flex items-center justify-between pt-32">
           <h2 className="flex-initial inline-flex flex-col text-7xl font-Poppins font-normal tracking-tight relative z-10">
             <p>Let's work</p>
             <p className="ml-20">together ❤️</p>
           </h2>
           <div className="block">
-            <a className="flex-col items-center mr-20 w-60 h-60 p-6 cursor-pointer hover:text-black hover:bg-yellow-500 hover:rotate-[20deg] transition duration-300 ease-in-out text-2xl justify-center inline-flex text-center bg-black text-white rounded-full shadow-2xl shadow-yellow-600 hover:shadow-gray-400">
+            <a
+              href="mailto:jyotindrakt21@gmail.com"
+              className="flex-col items-center mr-20 w-60 h-60 p-6 cursor-pointer hover:rotate-[20deg] transition duration-300 ease-in-out text-2xl justify-center inline-flex text-center bg-black text-white rounded-full shadow-2xl shadow-yellow-600 hover:shadow-red-400"
+            >
               Write me a Mail
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -48,7 +51,7 @@ const CTA = () => {
               </div>
               <div className="w-full md:w-1/2">
                 <div className="block">
-                  <a className="flex-col items-center ml-20 mt-20 w-60 h-60 p-6 cursor-pointer hover:text-black hover:bg-yellow-500 hover:rotate-[20deg] transition duration-300 ease-in-out text-2xl justify-center inline-flex text-center bg-black text-white rounded-full shadow-2xl shadow-yellow-600 hover:shadow-gray-400">
+                  <a className="flex-col items-center ml-20 mt-20 w-60 h-60 p-6 cursor-pointer hover:rotate-[20deg] transition duration-300 ease-in-out text-2xl justify-center inline-flex text-center bg-black text-white rounded-full shadow-2xl shadow-yellow-600 hover:shadow-red-400">
                     Write me a Mail
                     <svg
                       xmlns="http://www.w3.org/2000/svg"

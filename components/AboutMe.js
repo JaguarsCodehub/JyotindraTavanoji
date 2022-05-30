@@ -47,9 +47,10 @@ const AboutMe = () => {
               </div>
             </div>
             <p className="relative max-w-sm pt-10 text-base leading-relaxed text-gray-600 border-b border-gray-600 sm:text-lg pb-14 before:absolute before:bottom-0 before:-mb-px before:w-16 before:border-b-2 before:border-gray-600">
-              Homebase is executing on the vision of data usage, portability and
-              management we had when building firebase. We never got there. Im
-              excited!
+              Hello, I am a Fullstack Developer based in India, building some
+              great fullstack projects and working with startups to build dope
+              products. Creating great user-experience and working with new tech
+              is what I enjoy the most.
             </p>
           </div>
           <div className="w-full pt-10 md:w-1/2 md:pt-0">
@@ -68,10 +69,12 @@ const AboutMe = () => {
                 </div>
               </div>
               <div className="relative flex w-full overflow-x-scroll  bg-editor-800 bg-black rounded-b-md">
-                <Image
-                  src={require("../assets/images/hashnode-1.png")}
-                  alt="Blog"
-                />
+                <a href="https://jyotindra-kt.hashnode.dev/">
+                  <Image
+                    src={require("../assets/images/hashnode-1.png")}
+                    alt="Blog"
+                  />
+                </a>
               </div>
             </div>
           </div>

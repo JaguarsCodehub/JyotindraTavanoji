@@ -7,7 +7,7 @@ import Link from "next/link";
 const navigation = [
   { name: "Showcase", href: "/showcase", current: true },
   { name: "Resume", href: "/resume", current: false },
-  { name: "Connect", href: "/connect", current: false },
+  { name: "Connect", href: "mailto:jyotindrakt21@gmail.com", current: false },
 ];
 
 function classNames(...classes) {
