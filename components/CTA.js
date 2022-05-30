@@ -43,7 +43,7 @@ const CTA = () => {
             <div className="flex flex-wrap items-center sm:-mx-3">
               <div className="w-full md:w-1/2 md:px-3">
                 <div className="w-full pb-6 space-y-6 sm:max-w-md lg:max-w-lg md:space-y-4 lg:space-y-8 xl:space-y-9 sm:pr-5 lg:pr-0 md:pb-0">
-                  <h2 className="flex-initial inline-flex flex-col text-7xl font-Poppins font-normal tracking-tight relative z-10">
+                  <h2 className="flex-initial inline-flex flex-col text-5xl font-Poppins font-normal tracking-tight relative z-10">
                     <p>Lets work</p>
                     <p className="ml-20">together</p>
                   </h2>
