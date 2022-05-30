@@ -7,7 +7,7 @@ const CTA = () => {
       <div id="cta" className="hidden md:block max-w-7xl mx-auto">
         <div className="flex items-center justify-between pt-32">
           <h2 className="flex-initial inline-flex flex-col text-7xl font-Poppins font-normal tracking-tight relative z-10">
-            <p>Let's work</p>
+            <p>Lets work</p>
             <p className="ml-20">together ❤️</p>
           </h2>
           <div className="block">
@@ -44,7 +44,7 @@ const CTA = () => {
               <div className="w-full md:w-1/2 md:px-3">
                 <div className="w-full pb-6 space-y-6 sm:max-w-md lg:max-w-lg md:space-y-4 lg:space-y-8 xl:space-y-9 sm:pr-5 lg:pr-0 md:pb-0">
                   <h2 className="flex-initial inline-flex flex-col text-7xl font-Poppins font-normal tracking-tight relative z-10">
-                    <p>Let's work</p>
+                    <p>Lets work</p>
                     <p className="ml-20">together</p>
                   </h2>
                 </div>
