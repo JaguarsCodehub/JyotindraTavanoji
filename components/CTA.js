@@ -51,7 +51,7 @@ const CTA = () => {
               </div>
               <div className="w-full md:w-1/2">
                 <div className="block">
-                  <a className="flex-col items-center ml-20 mt-20 w-60 h-60 p-6 cursor-pointer hover:rotate-[20deg] transition duration-300 ease-in-out text-2xl justify-center inline-flex text-center bg-black text-white rounded-full shadow-2xl shadow-yellow-600 hover:shadow-red-400">
+                  <a className="flex-col items-center mt-20 w-60 h-60 p-6 cursor-pointer hover:rotate-[20deg] transition duration-300 ease-in-out text-2xl justify-center inline-flex text-center bg-black text-white rounded-full shadow-2xl shadow-yellow-600 hover:shadow-red-400">
                     Write me a Mail
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
