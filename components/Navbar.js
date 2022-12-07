@@ -6,8 +6,8 @@ import Link from "next/link";
 
 const navigation = [
   { name: "Showcase", href: "/showcase", current: true },
-  { name: "Resume", href: "/resume", current: false },
-  { name: "Connect", href: "mailto:jyotindrakt21@gmail.com", current: false },
+  { name: "Resume", href: "/resume", current: true },
+  { name: "Connect", href: "mailto:jyotindrakt21@gmail.com", current: true },
 ];
 
 function classNames(...classes) {
@@ -68,7 +68,7 @@ export default function Navbar() {
                       <span className="sr-only">Open user menu</span>
                       <img
                         className="h-8 w-8 rounded-full"
-                        src="https://pbs.twimg.com/profile_images/1498171411256717315/B_Wy0EKu_400x400.jpg"
+                        
                         alt=""
                       />
                     </Menu.Button>

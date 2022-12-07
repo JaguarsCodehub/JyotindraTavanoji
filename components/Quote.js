@@ -9,7 +9,7 @@ const Quote = () => {
           <h1 className="text-xl font-Poppins font-semibold tracking-tight mt-10 text-center text-gray-800 mb-7">
             My Tech Stack
           </h1>
-          <div className="grid items-center justify-center grid-cols-4 grid-cols-12 gap-y-8">
+          <div className="grid items-center justify-center grid-cols-4 grid-cols-12 gap-y-8 gap-x-4">
             <div className="flex items-center justify-center col-span-6 sm:col-span-4 md:col-span-3 xl:col-span-2">
               <img
                 src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/8e/Nextjs-logo.svg/800px-Nextjs-logo.svg.png"
@@ -49,6 +49,50 @@ const Quote = () => {
             <div className="flex items-center justify-center col-span-6 sm:col-span-4 md:col-span-3 xl:col-span-2">
               <img
                 src="https://www.softwareone.com/-/media/global/logos/aws-logo-teaser.png?rev=7faf0711601f44be8c333218fb2de560&sc_lang=en-jm&hash=F54C9250AF7ED0CDB4A9BDF0A6308117"
+                alt="Youtube"
+                className="block object-contain h-18 lg:h-18"
+              />
+            </div>
+            <div className="flex items-center justify-center col-span-6 sm:col-span-4 md:col-span-3 xl:col-span-2">
+              <Image
+                src={require("../assets/images/graph.png")}
+                alt="Youtube"
+                className="block object-contain h-18 lg:h-18"
+              />
+            </div>
+            <div className="flex items-center justify-center col-span-6 sm:col-span-4 md:col-span-3 xl:col-span-2">
+              <img
+                src="https://kubernetes.io/images/kubernetes-horizontal-color.png"
+                alt="Youtube"
+                className="block object-contain h-18 lg:h-18"
+              />
+            </div>
+            <div className="flex items-center justify-center col-span-6 sm:col-span-4 md:col-span-3 xl:col-span-2">
+              <img
+                src="https://1000logos.net/wp-content/uploads/2021/11/Docker-Logo-2015.png"
+                alt="Youtube"
+                className="block object-contain h-18 lg:h-18"
+              />
+            </div>
+            <div className="flex items-center justify-center col-span-6 sm:col-span-4 md:col-span-3 xl:col-span-2">
+              <img
+                src="https://helm.sh/img/helm.svg"
+                width={100}
+                height={100}
+                alt="Youtube"
+                className="block object-contain h-18 lg:h-18"
+              />
+            </div>
+            <div className="flex items-center justify-center col-span-6 sm:col-span-4 md:col-span-3 xl:col-span-2">
+              <Image
+                src={require("../assets/images/terraform.png")}
+                alt="Youtube"
+                className="block object-contain h-18 lg:h-18"
+              />
+            </div>
+            <div className="flex items-center justify-center col-span-6 sm:col-span-4 md:col-span-3 xl:col-span-2">
+              <Image
+                src={require("../assets/images/linode.png")}
                 alt="Youtube"
                 className="block object-contain h-18 lg:h-18"
               />
