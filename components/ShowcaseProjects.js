@@ -4,7 +4,7 @@ import Image from "next/image";
 const ShowcaseProjects = () => {
   return (
     <div>
-      <section className="px-6 py-32 sm:px-14 lg:px-24 xl:px-54 bg-gray-200">
+      <section className="px-6 py-32 sm:px-18 lg:px-24 xl:px-54 bg-gray-200">
         <div className="flex items-center justify-center flex-col">
           <h2 className="text-6xl font-normal tracking-widest text-center text-gray-700 sm:text-5xl md:text-9xl leading-tighter font-Poppins">
             SHOWCASE
