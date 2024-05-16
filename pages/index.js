@@ -50,7 +50,7 @@ export default function Home() {
           </div>
         </MaxWidthWrapper>
         <TabsDemo />
-        <AboutMe />
+        {/* <AboutMe /> */}
 
         <Timeline />
         <Quote />
