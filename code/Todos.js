@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState } from 'react';
 // import Form from "./Form";
 
 export default function Todos() {
@@ -17,7 +17,7 @@ export default function Todos() {
     );
 
   return (
-    <div className="App">
+    <div className='App'>
       <h1>Hello CodeSandbox</h1>
       <h2>Start editing to see some magic happen!</h2>
 
@@ -31,7 +31,7 @@ export default function Todos() {
               key={text}
               onClick={() => todoComplete(i)}
               style={{
-                textDecoration: complete ? "line-through" : "",
+                textDecoration: complete ? 'line-through' : '',
               }}
             >
               {text}
