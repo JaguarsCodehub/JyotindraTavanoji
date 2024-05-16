@@ -3,9 +3,9 @@ const nextConfig = {
   reactStrictMode: true,
   images: {
     domains: [
-      "cdn-icons-png.flaticon.com",
-      "upload.wikimedia.org",
-      "images.unsplash.com",
+      'cdn-icons-png.flaticon.com',
+      'upload.wikimedia.org',
+      'images.unsplash.com',
     ],
   },
 };
