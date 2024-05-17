@@ -9,6 +9,7 @@ import {
   Twitter,
 } from 'lucide-react';
 import MaxWidthWrapper from './ui/max-width-wrapper';
+import { Badge } from './ui/badge';
 
 const ShowcaseProjects = () => {
   return (
@@ -46,30 +47,29 @@ const ShowcaseProjects = () => {
             <div className='flex flex-col w-full pt-24 pr-12 space-y-4 md:pr-16 md:w-1/3'>
               <div className='relative pt-4 border-b border-gray-900 pb-7 before:absolute before:border-b before:border-gray-500 before:bottom-0 before:w-3/4 before:-mb-px'>
                 <h3 className='text-xl font-medium text-black font-Poppins'>
-                  Netflix with Next Js and Stripe Payments ✅
+                  Chess Multiplayer Game with websockets{' '}
+                  <Badge className='bg-lime-500 font-light text-black'>
+                    sockets
+                  </Badge>
                 </h3>
                 <p className='pt-4 text-sm leading-relaxed text-gray-700'>
-                  Server Side Rendering with Next Js and Stripe Payment
-                  Intergration with Subscriptions
+                  Enhancing the use of websockets for peer to peer game
+                  connectivity
                 </p>
               </div>
               <div className='pt-4 border-b border-gray-900 pb-7'>
                 <h3 className='text-xl font-medium text-black font-Poppins'>
-                  Fetching Movies with API ✅
+                  Seamless Chess UI with valid moves
                 </h3>
                 <p className='pt-4 text-sm leading-relaxed text-gray-700'>
-                  Used TMDB Api for fetching movies and showcasing it on the
-                  FrontEnd. Also integrated Authentication for only Stripe
-                  Payment Users.
+                  User Interface powered by Core React and best practices
                 </p>
               </div>
               <div className='pt-4 border-b border-gray-900 pb-7'>
                 <h3 className='text-xl font-medium text-black font-Poppins'>
-                  Responsive UI with Tailwind CSS ✅
+                  Type Safe Socket Server with Node js and Typescript{' '}
+                  <Badge className='bg-blue-500'>typescript</Badge>
                 </h3>
-                <p className='pt-4 text-sm leading-relaxed text-gray-700'>
-                  Built responsive UI with Tailwind CSS for All screen sizes
-                </p>
               </div>
               <Button onClick={() => {}}>
                 <Code className='mr-2 h-4 w-4 text-white' /> Codebase
@@ -127,41 +127,37 @@ const ShowcaseProjects = () => {
             <div className='flex flex-col w-full pt-24 pl-12 space-y-4 md:pr-16 md:w-1/3'>
               <div className='relative pt-4 border-b border-gray-900 pb-7 before:absolute before:border-b before:border-gray-500 before:bottom-0 before:w-3/4 before:-mb-px'>
                 <h3 className='text-xl font-medium text-black font-Poppins'>
-                  Devops + Kubernetes
+                  Scalable Chat Application with High Level System Design{' '}
+                  <Badge className='bg-yellow-500 text-black'>
+                    System Design
+                  </Badge>
                 </h3>
                 <p className='pt-4 text-sm leading-relaxed text-gray-700'>
-                  Managed React Deployment through Kubernetes and Automation
-                  with Terraform. Configured CI-CD Pipeline with Circle CI.
+                  High Level Scaling Design with Redis
                 </p>
               </div>
               <div className='pt-4 border-b border-gray-900 pb-7'>
                 <h3 className='text-xl font-medium text-black font-Poppins'>
-                  Container Orchestration
+                  Pub - Sub Architecture with Redis Insight{' '}
+                  <Badge className='bg-red-500 text-white font-normal'>
+                    Redis
+                  </Badge>
                 </h3>
                 <p className='pt-4 text-sm leading-relaxed text-gray-700'>
-                  Container Orchestration with Kubernetes and Kubernetes
-                  Services and Deployments
+                  Using Redis as a Key Storage to store messages as values for
+                  faster caching
                 </p>
               </div>
               <div className='pt-4 border-b border-gray-900 pb-7'>
                 <h3 className='text-xl font-medium text-black font-Poppins'>
-                  Terraform Automation to create Linode Clusters
+                  Kafka Streaming and Consumer
                 </h3>
                 <p className='pt-4 text-sm leading-relaxed text-gray-700'>
-                  Implementing Infrastructure as Code using Terraform to create
-                  Linode Cloud Clusters.
+                  Kafka used for consuming our messages so that our DB does not
+                  gets blocked in the case of a lot of messages
                 </p>
               </div>
-              <div className='pt-4 border-b border-gray-900 pb-7'>
-                <h3 className='text-xl font-medium text-black font-Poppins'>
-                  Helm Package Manager
-                </h3>
-                <p className='pt-4 text-sm leading-relaxed text-gray-700'>
-                  Helm is a templating engine that creates Kubernetes manifests.
-                  What makes Helm more than that is it can upgrade and scale
-                  applications as well.
-                </p>
-              </div>
+
               <Button onClick={() => {}}>
                 <Code className='mr-2 h-4 w-4 text-white' /> Codebase
               </Button>
@@ -199,29 +195,32 @@ const ShowcaseProjects = () => {
             <div className='flex flex-col w-full pt-24 pl-12 space-y-4 md:pr-16 md:w-1/3'>
               <div className='relative pt-4 border-b border-gray-900 pb-7 before:absolute before:border-b before:border-gray-500 before:bottom-0 before:w-3/4 before:-mb-px'>
                 <h3 className='text-xl font-medium text-black font-Poppins'>
-                  Twitter Clone + Firebase 💙🔥
+                  Vercel like Code Deploy Service{' '}
+                  <Badge className='bg-slate-400 text-black'>Vercel</Badge>
                 </h3>
                 <p className='pt-4 text-sm leading-relaxed text-gray-700'>
-                  Integrated all the main features of Twitter like Posting
-                  tweets, Retweet thread, Post local Image
+                  Implemented a Node Js Server to handle the submission of
+                  projects to AWS ECS
                 </p>
               </div>
               <div className='pt-4 border-b border-gray-900 pb-7'>
                 <h3 className='text-xl font-medium text-black font-Poppins'>
-                  Next Auth Authentication 💙📧
+                  Docker + AWS ECS{' '}
+                  <Badge className='bg-blue-400 text-black'>Docker</Badge>
                 </h3>
                 <p className='pt-4 text-sm leading-relaxed text-gray-700'>
-                  Authentication feature using Next Auth and Google Cloud
-                  Platform. Signin with your Google Email !
+                  A Docker Container on AWS ECS to build the projects and
+                  compile it into an html file that gets stored in S3
                 </p>
               </div>
               <div className='pt-4 border-b border-gray-900 pb-7'>
                 <h3 className='text-xl font-medium text-black font-Poppins'>
-                  Express you feelings with Emojis Now 💙😉
+                  Reverse Proxy Server{' '}
+                  <Badge className='bg-yellow-400 text-black'>Proxy</Badge>
                 </h3>
                 <p className='pt-4 text-sm leading-relaxed text-gray-700'>
-                  Used emoji package to integrate the usage of emoticons in the
-                  Tweet feature
+                  A Proxy Server to listen to events and generate a URL to host
+                  the deployed code from s3
                 </p>
               </div>
               <Button onClick={() => {}}>
@@ -239,31 +238,25 @@ const ShowcaseProjects = () => {
             <div className='flex flex-col w-full pt-24 pr-12 space-y-4 md:pr-16 md:w-1/3'>
               <div className='relative pt-4 border-b border-gray-900 pb-7 before:absolute before:border-b before:border-gray-500 before:bottom-0 before:w-3/4 before:-mb-px'>
                 <h3 className='text-xl font-medium text-black font-Poppins'>
-                  Deploying Django Application on Cloud
+                  Socket 3d Multiplayer Role Game{' '}
+                  <Badge className='bg-cyan-400 text-black'>Coming soon</Badge>
                 </h3>
                 <p className='pt-4 text-sm leading-relaxed text-gray-700'>
-                  Managed network and services with Kubernetes for a Django
-                  Application on Docker & AWS
+                  A React Game built with react-three-fiber for rendering the
+                  assets and characters
                 </p>
               </div>
               <div className='pt-4 border-b border-gray-900 pb-7'>
                 <h3 className='text-xl font-medium text-black font-Poppins'>
-                  Dockerized a Django Application
+                  A Node Js Socket server{' '}
+                  <Badge className='bg-green-500'>Server</Badge>
                 </h3>
                 <p className='pt-4 text-sm leading-relaxed text-gray-700'>
-                  Created a Docker File and build an image for my Django
-                  Application
+                  handles the character events and their movements and also
+                  synchronizes it with other peers
                 </p>
               </div>
-              <div className='pt-4 border-b border-gray-900 pb-7'>
-                <h3 className='text-xl font-medium text-black font-Poppins'>
-                  Created NodePort Services + Deployments with Kubernetes
-                </h3>
-                <p className='pt-4 text-sm leading-relaxed text-gray-700'>
-                  Configured an External IP using NodePort Kubernetes Service
-                  and Deployments.
-                </p>
-              </div>
+
               <Button onClick={() => {}}>
                 <Code className='mr-2 h-4 w-4 text-white' /> Codebase
               </Button>
@@ -301,29 +294,30 @@ const ShowcaseProjects = () => {
             <div className='flex flex-col w-full pt-24 pr-12 space-y-4 md:pr-16 md:w-1/3'>
               <div className='relative pt-4 border-b border-gray-900 pb-7 before:absolute before:border-b before:border-gray-500 before:bottom-0 before:w-3/4 before:-mb-px'>
                 <h3 className='text-xl font-medium text-black font-Poppins'>
-                  Reddit Clone with AWS Backend 🧡⚙️
+                  Note Taking application like Notion
                 </h3>
                 <p className='pt-4 text-sm leading-relaxed text-gray-700'>
-                  Integrated AWS Backend services in this project for Auth,
-                  Database, GraphQl API, Storage
+                  A Editor just like Notion powered by React and Convex
                 </p>
               </div>
               <div className='pt-4 border-b border-gray-900 pb-7'>
                 <h3 className='text-xl font-medium text-black font-Poppins'>
-                  AWS Bucket S3 & AWS Dynamo DB 🧡
+                  Real time changes with Convex functions{' '}
+                  <Badge className='bg-green-500'>Real Time</Badge>
                 </h3>
                 <p className='pt-4 text-sm leading-relaxed text-gray-700'>
-                  This project is powered by AWS Dyanmo DB for Database and AWS
-                  s3 bucket for storing the images
+                  You can edit your pages in real time, thanks to Convex
+                  functions and Fast and Secure Database
                 </p>
               </div>
               <div className='pt-4 border-b border-gray-900 pb-7'>
                 <h3 className='text-xl font-medium text-black font-Poppins'>
-                  GraphQl API + Typescript 🟣📘
+                  Auth + Responsive + Secure and Scalable Architecture{' '}
+                  <Badge className='bg-purple-400'>Clerk Auth</Badge>
                 </h3>
                 <p className='pt-4 text-sm leading-relaxed text-gray-700'>
-                  Used Typescript for the very first time in this project with
-                  GraphQl API
+                  Auth powered by Clerk, File Storage powered by Uploadthing and
+                  Database powered by Convex
                 </p>
               </div>
               <Button onClick={() => {}}>
@@ -385,29 +379,30 @@ const ShowcaseProjects = () => {
             <div className='flex flex-col w-full pt-24 pl-12 space-y-4 md:pr-16 md:w-1/3'>
               <div className='relative pt-4 border-b border-gray-900 pb-7 before:absolute before:border-b before:border-gray-500 before:bottom-0 before:w-3/4 before:-mb-px'>
                 <h3 className='text-xl font-medium text-black font-Poppins'>
-                  Twitter Clone + Firebase 💙🔥
+                  Community Platform{' '}
+                  <Badge className='bg-purple-500 text-white'>TeamChat</Badge>
                 </h3>
                 <p className='pt-4 text-sm leading-relaxed text-gray-700'>
-                  Integrated all the main features of Twitter like Posting
-                  tweets, Retweet thread, Post local Image
+                  Integrated all the main features of chat application like
+                  chatting, sending attachments etc
                 </p>
               </div>
               <div className='pt-4 border-b border-gray-900 pb-7'>
                 <h3 className='text-xl font-medium text-black font-Poppins'>
-                  Next Auth Authentication 💙📧
+                  Seamless Modern Chat UI with responsiveness
                 </h3>
                 <p className='pt-4 text-sm leading-relaxed text-gray-700'>
-                  Authentication feature using Next Auth and Google Cloud
-                  Platform. Signin with your Google Email !
+                  Auth powered by Tailwind Css with ShadcnUI
                 </p>
               </div>
               <div className='pt-4 border-b border-gray-900 pb-7'>
                 <h3 className='text-xl font-medium text-black font-Poppins'>
-                  Express you feelings with Emojis Now 💙😉
+                  Text, Audio and Video channels just like Discord{' '}
+                  <Badge>Discord</Badge>
                 </h3>
                 <p className='pt-4 text-sm leading-relaxed text-gray-700'>
-                  Used emoji package to integrate the usage of emoticons in the
-                  Tweet feature
+                  Used emoji package to integrate the usage of emoticons in
+                  message
                 </p>
               </div>
               <Button onClick={() => {}}>
@@ -447,29 +442,28 @@ const ShowcaseProjects = () => {
             <div className='flex flex-col w-full pt-24 pl-12 space-y-4 md:pr-16 md:w-1/3'>
               <div className='relative pt-4 border-b border-gray-900 pb-7 before:absolute before:border-b before:border-gray-500 before:bottom-0 before:w-3/4 before:-mb-px'>
                 <h3 className='text-xl font-medium text-black font-Poppins'>
-                  Twitter Clone + Firebase 💙🔥
+                  Profane Detection API <Badge>API</Badge>
                 </h3>
                 <p className='pt-4 text-sm leading-relaxed text-gray-700'>
-                  Integrated all the main features of Twitter like Posting
-                  tweets, Retweet thread, Post local Image
+                  Detection of cuse words and giving a profane score
                 </p>
               </div>
               <div className='pt-4 border-b border-gray-900 pb-7'>
                 <h3 className='text-xl font-medium text-black font-Poppins'>
-                  Next Auth Authentication 💙📧
+                  Hono Js + Cloudfare + Typescript{' '}
+                  <Badge className='bg-red-500 text-black'>Techstack</Badge>
                 </h3>
                 <p className='pt-4 text-sm leading-relaxed text-gray-700'>
-                  Authentication feature using Next Auth and Google Cloud
-                  Platform. Signin with your Google Email !
+                  A custom built api from scratch using modern API Techstack
                 </p>
               </div>
               <div className='pt-4 border-b border-gray-900 pb-7'>
                 <h3 className='text-xl font-medium text-black font-Poppins'>
-                  Express you feelings with Emojis Now 💙😉
+                  Profane Score to validate how profane a sentence is.{' '}
+                  <Badge className='bg-green-500 text-black'>Upstash</Badge>
                 </h3>
                 <p className='pt-4 text-sm leading-relaxed text-gray-700'>
-                  Used emoji package to integrate the usage of emoticons in the
-                  Tweet feature
+                  Vector Database powered by Upstash
                 </p>
               </div>
               <Button onClick={() => {}}>
@@ -485,32 +479,19 @@ const ShowcaseProjects = () => {
         <section className='px-6 py-32 sm:px-14 lg:px-24 xl:px-54 bg-gray-200'>
           <div className='flex flex-col md:flex-row'>
             <div className='flex flex-col w-full pt-24 pr-12 space-y-4 md:pr-16 md:w-1/3'>
-              <div className='relative pt-4 border-b border-gray-900 pb-7 before:absolute before:border-b before:border-gray-500 before:bottom-0 before:w-3/4 before:-mb-px'>
+              <div className='pt-4 border-b border-gray-900 pb-7'>
                 <h3 className='text-xl font-medium text-black font-Poppins'>
-                  Reddit Clone with AWS Backend 🧡⚙️
+                  Advanced backend Food API <Badge>MVC</Badge>
                 </h3>
                 <p className='pt-4 text-sm leading-relaxed text-gray-700'>
-                  Integrated AWS Backend services in this project for Auth,
-                  Database, GraphQl API, Storage
+                  Food API built with express and typescript with mvc folder
+                  structure
                 </p>
               </div>
               <div className='pt-4 border-b border-gray-900 pb-7'>
                 <h3 className='text-xl font-medium text-black font-Poppins'>
-                  AWS Bucket S3 & AWS Dynamo DB 🧡
+                  MongoDB + Express backend
                 </h3>
-                <p className='pt-4 text-sm leading-relaxed text-gray-700'>
-                  This project is powered by AWS Dyanmo DB for Database and AWS
-                  s3 bucket for storing the images
-                </p>
-              </div>
-              <div className='pt-4 border-b border-gray-900 pb-7'>
-                <h3 className='text-xl font-medium text-black font-Poppins'>
-                  GraphQl API + Typescript 🟣📘
-                </h3>
-                <p className='pt-4 text-sm leading-relaxed text-gray-700'>
-                  Used Typescript for the very first time in this project with
-                  GraphQl API
-                </p>
               </div>
               <Button onClick={() => {}}>
                 <Code className='mr-2 h-4 w-4 text-white' /> Codebase
@@ -529,7 +510,7 @@ const ShowcaseProjects = () => {
                   </div>
                   <div className='pl-6'>
                     <div className='h-8 px-4 py-2 text-xs font-normal tracking-wider font-Poppins bg-black text-white bg-editor-800 w-28 rounded-t-md'>
-                      VideoChat
+                      Backend
                     </div>
                   </div>
                 </div>
@@ -547,31 +528,24 @@ const ShowcaseProjects = () => {
         <section className='px-6 py-32 sm:px-14 lg:px-24 xl:px-54 bg-gray-200'>
           <div className='flex flex-col md:flex-row'>
             <div className='flex flex-col w-full pt-24 pr-12 space-y-4 md:pr-16 md:w-1/3'>
-              <div className='relative pt-4 border-b border-gray-900 pb-7 before:absolute before:border-b before:border-gray-500 before:bottom-0 before:w-3/4 before:-mb-px'>
+              <div className='pt-4 border-b border-gray-900 pb-7'>
                 <h3 className='text-xl font-medium text-black font-Poppins'>
-                  Reddit Clone with AWS Backend 🧡⚙️
+                  Video Calling Websocket application{' '}
+                  <Badge className='bg-green-500'>socket</Badge>
                 </h3>
                 <p className='pt-4 text-sm leading-relaxed text-gray-700'>
-                  Integrated AWS Backend services in this project for Auth,
-                  Database, GraphQl API, Storage
+                  Built using websocket servers in the backend and listening to
+                  events.
                 </p>
               </div>
               <div className='pt-4 border-b border-gray-900 pb-7'>
                 <h3 className='text-xl font-medium text-black font-Poppins'>
-                  AWS Bucket S3 & AWS Dynamo DB 🧡
+                  Frontend powered by WebRTC API{' '}
+                  <Badge className='bg-red-500 text-black'>Interesting</Badge>
                 </h3>
                 <p className='pt-4 text-sm leading-relaxed text-gray-700'>
-                  This project is powered by AWS Dyanmo DB for Database and AWS
-                  s3 bucket for storing the images
-                </p>
-              </div>
-              <div className='pt-4 border-b border-gray-900 pb-7'>
-                <h3 className='text-xl font-medium text-black font-Poppins'>
-                  GraphQl API + Typescript 🟣📘
-                </h3>
-                <p className='pt-4 text-sm leading-relaxed text-gray-700'>
-                  Used Typescript for the very first time in this project with
-                  GraphQl API
+                  Using STUN Server Logic and ICE Candidates to actually stream
+                  the video and audio stream
                 </p>
               </div>
               <Button onClick={() => {}}>

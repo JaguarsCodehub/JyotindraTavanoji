@@ -16,7 +16,7 @@ const Hero = () => {
                 <h1 className='tracking-tighter text-7xl font-Poppins font-medium -ml-2 text-gray-700 sm:text-5xl md:text-7xl lg:text-7xl xl:text-9xl'>
                   FullStack
                 </h1>
-                <span className='tracking-tighter top-4 relative text-7xl font-Poppins font-medium px-2  text-green-500 sm:text-5xl md:text-7xl lg:text-5xl xl:text-7xl'>
+                <span className='tracking-tighter top-4 relative text-7xl font-Poppins font-medium px-2  text-green-600 sm:text-5xl md:text-7xl lg:text-5xl xl:text-7xl'>
                   Developer
                 </span>{' '}
                 <p className='font-Poppins ml-30 text-base text-gray-500 sm:max-w-md lg:text-xl md:max-w-3xl'>

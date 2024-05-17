@@ -16,7 +16,7 @@ const SelectedProjects = () => {
           <div className='flex flex-col w-full pt-24 pr-12 space-y-4 md:pr-16 md:w-1/3'>
             <div className='relative pt-4 border-b border-gray-900 pb-7 before:absolute before:border-b before:border-gray-500 before:bottom-0 before:w-3/4 before:-mb-px'>
               <h3 className='text-xl font-medium text-black font-Poppins'>
-                Netflix with Next Js and Stripe Payments ✅
+                Chess Multiplayer gamne
               </h3>
               <p className='pt-4 text-sm leading-relaxed text-gray-700'>
                 Server Side Rendering with Next Js and Stripe Payment
