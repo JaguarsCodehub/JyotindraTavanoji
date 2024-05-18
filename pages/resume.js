@@ -6,6 +6,17 @@ import Image from 'next/image';
 import React from 'react';
 
 const Resume = () => {
+  const handleDownload = () => {
+    // The path to your PDF file in the public folder
+    const pdfUrl = '/resume.pdf';
+    const link = document.createElement('a');
+    link.href = pdfUrl;
+    link.download = 'resume.pdf';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
   return (
     <div>
       <Navbar />
@@ -19,7 +30,7 @@ const Resume = () => {
               </span>{' '}
             </h2>
             <div className='mt-12'>
-              <Button className='rounded-full'>
+              <Button className='rounded-full' onClick={handleDownload}>
                 <DownloadIcon className='mr-2 h-4 w-4 text-white' />
                 Resume
               </Button>

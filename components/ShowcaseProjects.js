@@ -6,12 +6,16 @@ import {
   Code,
   GitCommitHorizontal,
   Laptop,
+  Linkedin,
+  LinkedinIcon,
   Twitter,
 } from 'lucide-react';
 import MaxWidthWrapper from './ui/max-width-wrapper';
 import { Badge } from './ui/badge';
+import { useRouter } from 'next/navigation';
 
 const ShowcaseProjects = () => {
+  const router = useRouter();
   return (
     <div className='bg-gray-200'>
       <MaxWidthWrapper className='py-12 '>
@@ -33,8 +37,8 @@ const ShowcaseProjects = () => {
                 className='rounded-full ml-6 bg-blue-600'
                 onClick={() => {}}
               >
-                <ArrowUpRight className='mr-2 h-4 w-4 text-white' />
-                All my projects
+                <Linkedin className='mr-2 h-4 w-4 text-white' />
+                LinkedIn Profile
               </Button>
             </div>
           </div>
@@ -71,7 +75,11 @@ const ShowcaseProjects = () => {
                   <Badge className='bg-blue-500'>typescript</Badge>
                 </h3>
               </div>
-              <Button onClick={() => {}}>
+              <Button
+                onClick={() =>
+                  router.push('https://github.com/JaguarsCodehub/chess')
+                }
+              >
                 <Code className='mr-2 h-4 w-4 text-white' /> Codebase
               </Button>
               <Button onClick={() => {}} className='bg-lime-500'>
@@ -158,7 +166,13 @@ const ShowcaseProjects = () => {
                 </p>
               </div>
 
-              <Button onClick={() => {}}>
+              <Button
+                onClick={() =>
+                  router.push(
+                    'https://github.com/JaguarsCodehub/scalable-chat-redis-socket-node'
+                  )
+                }
+              >
                 <Code className='mr-2 h-4 w-4 text-white' /> Codebase
               </Button>
               <Button onClick={() => {}} className='bg-blue-500'>
@@ -223,7 +237,13 @@ const ShowcaseProjects = () => {
                   the deployed code from s3
                 </p>
               </div>
-              <Button onClick={() => {}}>
+              <Button
+                onClick={() =>
+                  router.push(
+                    'https://github.com/JaguarsCodehub/vercel-infrastructure'
+                  )
+                }
+              >
                 <Code className='mr-2 h-4 w-4 text-white' /> Codebase
               </Button>
               <Button onClick={() => {}} className='bg-red-500'>
@@ -257,7 +277,13 @@ const ShowcaseProjects = () => {
                 </p>
               </div>
 
-              <Button onClick={() => {}}>
+              <Button
+                onClick={() =>
+                  router.push(
+                    'https://github.com/JaguarsCodehub/socket-3d-game'
+                  )
+                }
+              >
                 <Code className='mr-2 h-4 w-4 text-white' /> Codebase
               </Button>
               <Button onClick={() => {}} className='bg-blue-500'>

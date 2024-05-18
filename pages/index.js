@@ -15,8 +15,10 @@ import MaxWidthWrapper from '@/components/ui/max-width-wrapper';
 import { Button } from '@/components/ui/button';
 import { ArrowUpRight, GitCommitHorizontal, Twitter } from 'lucide-react';
 import AccordionComponent from '@/components/Accordion';
+import { useRouter } from 'next/navigation';
 
 export default function Home() {
+  const router = useRouter();
   return (
     <div>
       <Head>
@@ -41,7 +43,10 @@ export default function Home() {
                 now.
               </h2>
               <div className='mt-12'>
-                <Button className='rounded-full' onClick={() => {}}>
+                <Button
+                  className='rounded-full'
+                  onClick={() => router.push('/showcase')}
+                >
                   <ArrowUpRight className='mr-2 h-4 w-4 text-white' />
                   All my projects
                 </Button>
@@ -67,14 +72,16 @@ export default function Home() {
               <div className='mt-12 flex justify-center'>
                 <Button
                   className='rounded-full text-lg bg-gray-400'
-                  onClick={() => {}}
+                  onClick={() =>
+                    router.push('https://github.com/JaguarsCodehub')
+                  }
                 >
                   <GitCommitHorizontal className='mr-2 h-4 w-4 text-white' />
                   Github Profile
                 </Button>
                 <Button
                   className='rounded-full ml-6 bg-blue-400 text-lg'
-                  onClick={() => {}}
+                  onClick={() => router.push('https://x.com/jyotindrakt')}
                 >
                   <Twitter className='mr-2 h-4 w-4' />
                   Letʻs Connect
