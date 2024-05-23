@@ -29,13 +29,20 @@ const ShowcaseProjects = () => {
               with sourceCode.
             </h2>
             <div className='mt-12 flex justify-center'>
-              <Button className='rounded-full' onClick={() => {}}>
+              <Button
+                className='rounded-full'
+                onClick={() => router.push('https://github.com/JaguarsCodehub')}
+              >
                 <ArrowUpRight className='mr-2 h-4 w-4 text-white' />
                 All my projects
               </Button>
               <Button
                 className='rounded-full ml-6 bg-blue-600'
-                onClick={() => {}}
+                onClick={() =>
+                  router.push(
+                    'https://www.linkedin.com/in/jyotindra-tavanoji-41909317a/'
+                  )
+                }
               >
                 <Linkedin className='mr-2 h-4 w-4 text-white' />
                 LinkedIn Profile
