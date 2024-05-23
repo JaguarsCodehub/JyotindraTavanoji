@@ -346,7 +346,11 @@ const ShowcaseProjects = () => {
                   Database powered by Convex
                 </p>
               </div>
-              <Button onClick={() => {}}>
+              <Button
+                onClick={() =>
+                  router.push('https://github.com/JaguarsCodehub/note-taking')
+                }
+              >
                 <Code className='mr-2 h-4 w-4 text-white' /> Codebase
               </Button>
               <Button onClick={() => {}} className='bg-slate-400'>
@@ -431,7 +435,13 @@ const ShowcaseProjects = () => {
                   message
                 </p>
               </div>
-              <Button onClick={() => {}}>
+              <Button
+                onClick={() =>
+                  router.push(
+                    'https://github.com/JaguarsCodehub/team-chat-platform'
+                  )
+                }
+              >
                 <Code className='mr-2 h-4 w-4 text-white' /> Codebase
               </Button>
               <Button onClick={() => {}} className='bg-purple-500'>
@@ -492,7 +502,13 @@ const ShowcaseProjects = () => {
                   Vector Database powered by Upstash
                 </p>
               </div>
-              <Button onClick={() => {}}>
+              <Button
+                onClick={() =>
+                  router.push(
+                    'https://github.com/JaguarsCodehub/api-profane-production'
+                  )
+                }
+              >
                 <Code className='mr-2 h-4 w-4 text-white' /> Codebase
               </Button>
               <Button onClick={() => {}} className='bg-green-500'>
@@ -519,7 +535,13 @@ const ShowcaseProjects = () => {
                   MongoDB + Express backend
                 </h3>
               </div>
-              <Button onClick={() => {}}>
+              <Button
+                onClick={() =>
+                  router.push(
+                    'https://github.com/JaguarsCodehub/backend-food-advanced-api'
+                  )
+                }
+              >
                 <Code className='mr-2 h-4 w-4 text-white' /> Codebase
               </Button>
               <Button onClick={() => {}} className='bg-cyan-600'>
@@ -574,7 +596,11 @@ const ShowcaseProjects = () => {
                   the video and audio stream
                 </p>
               </div>
-              <Button onClick={() => {}}>
+              <Button
+                onClick={() =>
+                  router.push('https://github.com/JaguarsCodehub/omegle-ws')
+                }
+              >
                 <Code className='mr-2 h-4 w-4 text-white' /> Codebase
               </Button>
               <Button onClick={() => {}} className='bg-yellow-400'>
@@ -619,14 +645,16 @@ const ShowcaseProjects = () => {
               <div className='mt-12 flex justify-center'>
                 <Button
                   className='rounded-full text-lg bg-gray-400'
-                  onClick={() => {}}
+                  onClick={() =>
+                    router.push('https://github.com/JaguarsCodehub/')
+                  }
                 >
                   <GitCommitHorizontal className='mr-2 h-4 w-4 text-white' />
                   Github Profile
                 </Button>
                 <Button
                   className='rounded-full ml-6 bg-blue-400 text-lg'
-                  onClick={() => {}}
+                  onClick={() => router.push('https://x.com/jyotindrakt')}
                 >
                   <Twitter className='mr-2 h-4 w-4' />
                   Letʻs Connect
