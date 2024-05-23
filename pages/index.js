@@ -60,7 +60,11 @@ export default function Home() {
         <Timeline />
         <Quote />
         <MaxWidthWrapper className='py-12 '>
-          <div className='mb-12 px-6 lg:px-8'>
+          <Image
+            src={require('../assets/images/github-profile.png')}
+            alt='Github'
+          />
+          <div className='mt-20 mb-12 px-6 lg:px-8'>
             <div className='mx-auto sm:text-center'>
               <h2 className='text-3xl order-1 mt-2 tracking-tight text-center text-balance !leading-tight font-bold md:text-5xl lg:text-6xl text-gray-900'>
                 Not getting enough of me yet ? Dive into my{' '}
