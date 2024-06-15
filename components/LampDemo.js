@@ -16,7 +16,7 @@ export function LampDemo() {
         }}
         className='mt-8 bg-gradient-to-br from-slate-900 to-slate-900 py-4 bg-clip-text text-center text-4xl font-medium tracking-tight text-transparent md:text-7xl'
       >
-        Build lamps <br /> the right way
+        Build lamps <br /> the right way Yes
       </motion.h1>
     </LampContainer>
   );
