@@ -13,13 +13,14 @@ import {
 import MaxWidthWrapper from './ui/max-width-wrapper';
 import { Badge } from './ui/badge';
 import { useRouter } from 'next/navigation';
+import MyDevopsProjects from './NotionDoc';
 
 const ShowcaseProjects = () => {
   const router = useRouter();
   return (
     <div className='bg-gray-200'>
-      <MaxWidthWrapper className='py-12 '>
-        <div className='mb-12 px-6 lg:px-8'>
+      {/* <MaxWidthWrapper className='py-12 '>
+        <div className='mb-6 px-6 lg:px-8'>
           <div className='mx-auto max-w-2xl sm:text-center'>
             <h2 className='text-3xl order-1 mt-2 tracking-tight text-center text-balance !leading-tight font-bold md:text-5xl lg:text-6xl text-gray-900'>
               Deployed versions of projects are also{' '}
@@ -50,7 +51,11 @@ const ShowcaseProjects = () => {
             </div>
           </div>
         </div>
-      </MaxWidthWrapper>
+      </MaxWidthWrapper> */}
+
+      <div>
+        <MyDevopsProjects />
+      </div>
 
       <div>
         <section className='px-6 sm:px-14 lg:px-24 xl:px-54 bg-gray-200'>
@@ -88,9 +93,6 @@ const ShowcaseProjects = () => {
                 }
               >
                 <Code className='mr-2 h-4 w-4 text-white' /> Codebase
-              </Button>
-              <Button onClick={() => {}} className='bg-lime-500'>
-                <Laptop className='mr-2 h-4 w-4 text-white ' /> Live Version
               </Button>
             </div>
             <div className='flex flex-col items-start w-full pt-12 md:pt-24 md:w-2/3 '>
@@ -182,9 +184,6 @@ const ShowcaseProjects = () => {
               >
                 <Code className='mr-2 h-4 w-4 text-white' /> Codebase
               </Button>
-              <Button onClick={() => {}} className='bg-blue-500'>
-                <Laptop className='mr-2 h-4 w-4 text-white ' /> Live Version
-              </Button>
             </div>
           </div>
         </section>
@@ -253,9 +252,6 @@ const ShowcaseProjects = () => {
               >
                 <Code className='mr-2 h-4 w-4 text-white' /> Codebase
               </Button>
-              <Button onClick={() => {}} className='bg-red-500'>
-                <Laptop className='mr-2 h-4 w-4 text-white ' /> Live Version
-              </Button>
             </div>
           </div>
         </section>
@@ -292,9 +288,6 @@ const ShowcaseProjects = () => {
                 }
               >
                 <Code className='mr-2 h-4 w-4 text-white' /> Codebase
-              </Button>
-              <Button onClick={() => {}} className='bg-blue-500'>
-                <Laptop className='mr-2 h-4 w-4 text-white ' /> Live Version
               </Button>
             </div>
             <div className='flex flex-col items-start w-full pt-12 md:pt-24 md:w-2/3 '>
@@ -359,9 +352,6 @@ const ShowcaseProjects = () => {
                 }
               >
                 <Code className='mr-2 h-4 w-4 text-white' /> Codebase
-              </Button>
-              <Button onClick={() => {}} className='bg-slate-400'>
-                <Laptop className='mr-2 h-4 w-4 text-white ' /> Live Version
               </Button>
             </div>
             <div className='flex flex-col items-start w-full pt-12 md:pt-24 md:w-2/3 '>
@@ -451,9 +441,6 @@ const ShowcaseProjects = () => {
               >
                 <Code className='mr-2 h-4 w-4 text-white' /> Codebase
               </Button>
-              <Button onClick={() => {}} className='bg-purple-500'>
-                <Laptop className='mr-2 h-4 w-4 text-white ' /> Live Version
-              </Button>
             </div>
           </div>
         </section>
@@ -518,9 +505,6 @@ const ShowcaseProjects = () => {
               >
                 <Code className='mr-2 h-4 w-4 text-white' /> Codebase
               </Button>
-              <Button onClick={() => {}} className='bg-green-500'>
-                <Laptop className='mr-2 h-4 w-4 text-white ' /> Live Version
-              </Button>
             </div>
           </div>
         </section>
@@ -550,9 +534,6 @@ const ShowcaseProjects = () => {
                 }
               >
                 <Code className='mr-2 h-4 w-4 text-white' /> Codebase
-              </Button>
-              <Button onClick={() => {}} className='bg-cyan-600'>
-                <Laptop className='mr-2 h-4 w-4 text-white ' /> Live Version
               </Button>
             </div>
             <div className='flex flex-col items-start w-full pt-12 md:pt-24 md:w-2/3 '>
@@ -609,9 +590,6 @@ const ShowcaseProjects = () => {
                 }
               >
                 <Code className='mr-2 h-4 w-4 text-white' /> Codebase
-              </Button>
-              <Button onClick={() => {}} className='bg-yellow-400'>
-                <Laptop className='mr-2 h-4 w-4 text-white ' /> Live Version
               </Button>
             </div>
             <div className='flex flex-col items-start w-full pt-12 md:pt-24 md:w-2/3 '>

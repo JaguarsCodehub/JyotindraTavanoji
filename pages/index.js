@@ -57,9 +57,11 @@ export default function Home() {
         <TabsDemo />
         {/* <AboutMe /> */}
 
-        <Timeline />
-        <Quote />
-        <MaxWidthWrapper className='py-12 '>
+        {/* <Timeline /> */}
+        {/* <MaxWidthWrapper className='mt-52'>
+          <Quote />
+        </MaxWidthWrapper> */}
+        <MaxWidthWrapper className='py-12 mt-52'>
           <Image
             src={require('../assets/images/github-profile.png')}
             alt='Github'

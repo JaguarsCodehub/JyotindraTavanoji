@@ -12,9 +12,9 @@ const Projects = () => {
           <b className=' text-gray-800'>
             paper ball <Badge className='text-4xl bg-gray-800'>idea</Badge>
           </b>{' '}
-          into a <b className='text-green-600'>paper plane</b> with code and
+          into a <b className='text-emerald-600'>paper plane</b> with code and
           tech
-          <Badge className='text-4xl mt-6 bg-green-600'>core dev</Badge>
+          <Badge className='text-4xl mt-6 bg-emerald-600'>core dev</Badge>
         </h1>
       </div>
       <div className='lg:hidden xs:p-10 p-12'>
@@ -23,8 +23,8 @@ const Projects = () => {
           <b className='text-gray-800'>
             paper ball <Badge className='text-2xl bg-gray-800'>idea</Badge>
           </b>{' '}
-          into a <b className='text-green-600'>paper plane</b> with code and
-          tech <Badge className='text-2xl bg-green-600'>core dev</Badge>
+          into a <b className='text-emerald-600'>paper plane</b> with code and
+          tech <Badge className='text-2xl bg-emerald-600'>core dev</Badge>
           <b className='text-gray-800'></b>
         </h1>
       </div>
