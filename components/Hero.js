@@ -10,7 +10,6 @@ const Hero = () => {
         <div className=' items-center max-w-6xl px-8 mx-auto xl:px-5'>
           <div className='flex flex-wrap items-center sm:-mx-3'>
             <div className='w-full md:px-3'>
-              
               <div className='w-full pb-6 space-y-2 sm:max-w-md lg:max-w-lg md:space-y-4 lg:space-y-8 xl:space-y-9 sm:pr-5 lg:pr-0 md:pb-0'>
                 <h4 className='font-medium text-2xl text-black'>
                   Jyotindra Tavanoji <Badge className='bg-blue-500'>2025</Badge>
@@ -22,8 +21,8 @@ const Hero = () => {
                   Devops
                 </span>{' '} */}
                 <p className='font-Poppins ml-30 text-base text-gray-500 sm:max-w-md lg:text-xl md:max-w-3xl'>
-                  Its never been easier to build great applications and websites
-                  that poeple love and talk about them further. ❤️
+                  Orchestrating seamless digital experiences from concept to
+                  cloud. Full-Stack agility, DevOps velocity.
                 </p>
               </div>
             </div>
