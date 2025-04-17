@@ -16,6 +16,7 @@ import { Button } from '@/components/ui/button';
 import { ArrowUpRight, GitCommitHorizontal, Twitter } from 'lucide-react';
 import AccordionComponent from '@/components/Accordion';
 import { useRouter } from 'next/navigation';
+import MyDevopsProjects from '@/components/NotionDoc';
 
 export default function Home() {
   const router = useRouter();
@@ -31,6 +32,7 @@ export default function Home() {
       <main>
         <Navbar />
         <Hero />
+        <MyDevopsProjects />
         <Projects />
         <MaxWidthWrapper className='py-12'>
           <div className='mb-12 px-6 lg:px-8'>

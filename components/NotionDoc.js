@@ -27,7 +27,7 @@ const projects = [
 
 const MyDevopsProjects = () => {
   return (
-    <div className='flex flex-col items-center justify-start px-4 py-8 sm:px-6 md:px-8 lg:px-12'>
+    <div className='flex bg-gray-200 flex-col items-center justify-start px-4 py-8 sm:px-6 md:px-8 lg:px-12 bg-tr'>
       <h1 className='text-3xl sm:text-4xl md:text-5xl font-bold text-black mb-6 sm:mb-8 md:mb-10 text-center'>
         My DevOps Projects
       </h1>
