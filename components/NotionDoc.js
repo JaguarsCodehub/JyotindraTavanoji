@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button } from '@/components/ui/button'; // Assuming you have shadcn/ui setup
+import { Button } from '@/components/ui/button';
 import { motion } from 'framer-motion';
 
 const projects = [
@@ -27,11 +27,11 @@ const projects = [
 
 const MyDevopsProjects = () => {
   return (
-    <div className='flex flex-col items-center justify-start md:p-8'>
-      <h1 className='text-4xl sm:text-5xl md:text-6xl font-bold text-black mb-6 sm:mb-8 md:mb-10 text-center'>
-        My Devops Projects
+    <div className='flex flex-col items-center justify-start px-4 py-8 sm:px-6 md:px-8 lg:px-12'>
+      <h1 className='text-3xl sm:text-4xl md:text-5xl font-bold text-black mb-6 sm:mb-8 md:mb-10 text-center'>
+        My DevOps Projects
       </h1>
-      <div className='w-full max-w-3xl space-y-4 sm:space-y-6 md:space-y-4'>
+      <div className='w-full max-w-2xl sm:max-w-3xl space-y-4 sm:space-y-6'>
         {projects.map((project, index) => (
           <motion.div
             key={index}
@@ -43,8 +43,8 @@ const MyDevopsProjects = () => {
           >
             <Button
               variant='outline'
-              className='w-full flex items-center justify-center py-4 sm:py-5 rounded-lg md:py-6 text-lg sm:text-xl md:text-2xl font-mono bg-gray-300 text-gray-600 border border-dashed border-gray-700 hover:bg-gray-500/50 hover:border-gray-600 transition-all duration-300'
-              onClick={() => window.open(project.link, '_blank')} // Open in new tab
+              className='w-full text-center whitespace-normal break-words px-6 py-5 sm:py-8 md:py-5 text-base sm:text-lg md:text-xl font-mono bg-gray-300 text-gray-700 border border-dashed border-gray-700 hover:bg-gray-500/50 hover:border-gray-600 transition-all duration-300'
+              onClick={() => window.open(project.link, '_blank')}
             >
               {project.name}
             </Button>
