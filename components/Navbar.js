@@ -6,8 +6,8 @@ export default function Navbar() {
   return (
     <nav className="w-full border-b border-border bg-background/80 backdrop-blur-md sticky top-0 z-50">
       <div className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
-        <Link href="/" className="font-mono text-xl font-bold text-foreground hover:text-primary transition-colors">
-          Jyotindra Tavanoji
+        <Link href="/" className="font-mono text-md md:text-xl font-bold text-foreground hover:text-primary transition-colors">
+          jyotindra
         </Link>
         <div className="flex items-center space-x-6 text-sm font-medium">
           <Link href="/blogs" className="text-foreground hover:text-primary transition-colors">Blogs</Link>

@@ -8,7 +8,7 @@ const Hero = () => {
       <div className="flex flex-col-reverse md:flex-row items-start justify-between gap-12">
         <div className="w-full md:w-2/3">
           <h1 className="font-lora text-4xl md:text-5xl font-bold text-foreground mb-4">
-            Hey, I am Jyotindra ...
+            Hey, I am Jyotindra
           </h1>
           <p className="text-black font-medium text-lg mb-8">
             your friendly neighborhood <span className="font-bold text-rose-600">software engineer</span> who loves <span className="font-bold text-rose-600">backend engineering, distributed systems, and AI agents</span>.
