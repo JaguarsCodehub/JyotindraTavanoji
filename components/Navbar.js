@@ -1,13 +1,24 @@
 import React from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { Github } from 'lucide-react';
 
 export default function Navbar() {
   return (
     <nav className="w-full border-b border-border bg-background/80 backdrop-blur-md sticky top-0 z-50">
       <div className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
-        <Link href="/" className="font-mono text-md md:text-xl font-bold text-foreground hover:text-primary transition-colors">
-          jyotindra
+        <Link href="/" className="font-mono text-md md:text-xl font-bold text-foreground hover:text-primary transition-colors flex items-center">
+          <span className="hidden md:inline">jyotindra</span>
+          <div className="md:hidden w-8 h-8 rounded-full overflow-hidden shadow-sm border border-primary bg-card relative">
+            <Image 
+              src="https://avatars.githubusercontent.com/u/82316591?v=4" 
+              alt="Jyotindra Avatar" 
+              layout="fill" 
+              objectFit="cover" 
+              quality={95}
+              priority
+            />
+          </div>
         </Link>
         <div className="flex items-center space-x-6 text-sm font-medium">
           <Link href="/blogs" className="text-foreground hover:text-primary transition-colors">Blogs</Link>
