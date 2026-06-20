@@ -16,16 +16,16 @@ const Hero = () => {
           
           <div className="space-y-4 text-foreground/80 leading-relaxed">
             <p>
-              I'm a software engineer focused on backend engineering, distributed systems, and AI agents. I've spent the past two years working on production systems at Research Connect USA, <span className="font-semibold text-foreground">building event-driven architectures with Kafka, Kubernetes deployments</span>, PostgreSQL with Patroni, and building reliable infrastructure that doesn't break when load spikes.
+              I&apos;m a software engineer focused on backend engineering, distributed systems, and AI agents. I&apos;ve spent the past two years working on production systems at Research Connect USA, <span className="font-semibold text-foreground">building event-driven architectures with Kafka, Kubernetes deployments</span>, PostgreSQL with Patroni, and building reliable infrastructure that doesn&apos;t break when load spikes.
             </p>
             <p>
-              Built a task scheduler from scratch in Go to learn how DAG orchestration and goroutine concurrency patterns actually work in practice. <span className=" text-foreground">The goal is to understand how systems fail, not just how they're supposed to work.</span>
+              Built a task scheduler from scratch in Go to learn how DAG orchestration and goroutine concurrency patterns actually work in practice. <span className=" text-foreground">The goal is to understand how systems fail, not just how they&apos;re supposed to work.</span>
             </p>
             <p>
-              On the AI side, I've built a few systems: <span className="font-semibold text-foreground">a RAG pipeline combining hybrid search with HyDE and reranking</span>, a multi-agent finance research engine, and a schema analyst agent with self-correcting loops using LangGraph. <span className="font-semibold text-foreground">focusing on what actually matters for reliability, cost, and real constraints.</span>
+              On the AI side, I&apos;ve built a few systems: <span className="font-semibold text-foreground">a RAG pipeline combining hybrid search with HyDE and reranking</span>, a multi-agent finance research engine, and a schema analyst agent with self-correcting loops using LangGraph. <span className="font-semibold text-foreground">focusing on what actually matters for reliability, cost, and real constraints.</span>
             </p>
             <p>
-              I document what I'm learning: technical breakdowns, system design patterns, research on RAG internals and vector databases. <span className="font-semibold text-foreground">Not positioning myself as an expert; I'm still figuring this out</span>. Just sharing the journey as it happens.
+              I document what I&apos;m learning: technical breakdowns, system design patterns, research on RAG internals and vector databases. <span className="font-semibold text-foreground">Not positioning myself as an expert; I&apos;m still figuring this out</span>. Just sharing the journey as it happens.
             </p>
             <p className="font-bold text-red-600 pt-2">
               Looking to work on backend and AI infrastructure problems, preferably at places where both matter.

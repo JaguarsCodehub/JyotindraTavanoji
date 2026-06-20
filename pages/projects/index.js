@@ -63,7 +63,7 @@ export default function Projects() {
         {/* Web Projects */}
         <div className="mb-16">
           <h2 className="font-mono text-primary text-xl font-bold mb-8 uppercase tracking-wider">
-            // Web Projects
+            {"// Web Projects"}
           </h2>
           
           <div className="flex flex-col gap-4">
@@ -109,7 +109,7 @@ export default function Projects() {
         {/* DevOps & Infrastructure */}
         <div>
           <h2 className="font-mono text-primary text-xl font-bold mb-8 uppercase tracking-wider">
-            // DevOps & Infrastructure
+            {"// DevOps & Infrastructure"}
           </h2>
           
           <div className="flex flex-col gap-4">

@@ -47,7 +47,7 @@ export default function ProjectDetail({ project }) {
         {/* Resources Section */}
         <div>
           <h2 className="font-mono text-primary text-sm font-bold mb-6 uppercase tracking-widest border-b border-border/50 pb-2">
-            // Resources
+            {"// Resources"}
           </h2>
           
           <div className="flex flex-col gap-4">
