@@ -1,98 +1,78 @@
 import Image from 'next/image';
 import React from 'react';
-import { Badge } from './ui/badge';
-import GridBackground from './GridBackground';
+import { Github, Linkedin } from 'lucide-react';
 
 const Hero = () => {
   return (
-    <div>
-      <section className='px-2 py-32 bg-gray-200 md:px-0'>
-        <div className=' items-center max-w-6xl px-8 mx-auto xl:px-5'>
-          <div className='flex flex-wrap items-center sm:-mx-3'>
-            <div className='w-full md:px-3'>
-              <div className='w-full pb-6 space-y-2 sm:max-w-md lg:max-w-lg md:space-y-4 lg:space-y-8 xl:space-y-9 sm:pr-5 lg:pr-0 md:pb-0'>
-                <h4 className='font-medium text-2xl text-black'>
-                  Jyotindra Tavanoji <Badge className='bg-blue-500'>2025</Badge>
-                </h4>
-                <h1 className='tracking-tighter text-7xl font-Poppins font-medium -ml-2 text-gray-700 sm:text-5xl md:text-7xl lg:text-7xl xl:text-9xl'>
-                  FullStack+ Devops
-                </h1>
-                {/* <span className='tracking-tighter top-4 relative text-7xl font-Poppins font-medium  text-green-600 sm:text-5xl md:text-7xl lg:text-7xl xl:text-9xl'>
-                  Devops
-                </span>{' '} */}
-                <p className='font-Poppins ml-30 text-base text-gray-500 sm:max-w-md lg:text-xl md:max-w-3xl'>
-                  Orchestrating seamless digital experiences from concept to
-                  cloud. Full-Stack agility, DevOps velocity.
-                </p>
-              </div>
-            </div>
-            <div className='flex'>
-              <Image
-                src={require('../assets/images/diagram.png')}
-                className='w-full h-full mt-6'
-                alt='image'
-              />
-            </div>
+    <section className="max-w-6xl mx-auto px-6 py-20">
+      <div className="flex flex-col-reverse md:flex-row items-start justify-between gap-12">
+        <div className="w-full md:w-2/3">
+          <h1 className="font-lora text-4xl md:text-5xl font-bold text-foreground mb-4">
+            Hey, I am Jyotindra ...
+          </h1>
+          <p className="text-black font-medium text-lg mb-8">
+            your friendly neighborhood <span className="font-bold text-rose-600">software engineer</span> who loves <span className="font-bold text-rose-600">backend engineering, distributed systems, and AI agents</span>.
+          </p>
+          
+          <div className="space-y-4 text-foreground/80 leading-relaxed">
+            <p>
+              I'm a software engineer focused on backend engineering, distributed systems, and AI agents. I've spent the past two years working on production systems at Research Connect USA, <span className="font-semibold text-foreground">building event-driven architectures with Kafka, Kubernetes deployments</span>, PostgreSQL with Patroni, and building reliable infrastructure that doesn't break when load spikes.
+            </p>
+            <p>
+              Built a task scheduler from scratch in Go to learn how DAG orchestration and goroutine concurrency patterns actually work in practice. <span className=" text-foreground">The goal is to understand how systems fail, not just how they're supposed to work.</span>
+            </p>
+            <p>
+              On the AI side, I've built a few systems: <span className="font-semibold text-foreground">a RAG pipeline combining hybrid search with HyDE and reranking</span>, a multi-agent finance research engine, and a schema analyst agent with self-correcting loops using LangGraph. <span className="font-semibold text-foreground">focusing on what actually matters for reliability, cost, and real constraints.</span>
+            </p>
+            <p>
+              I document what I'm learning: technical breakdowns, system design patterns, research on RAG internals and vector databases. <span className="font-semibold text-foreground">Not positioning myself as an expert; I'm still figuring this out</span>. Just sharing the journey as it happens.
+            </p>
+            <p className="font-bold text-red-600 pt-2">
+              Looking to work on backend and AI infrastructure problems, preferably at places where both matter.
+            </p>
+          </div>
 
-            {/* Mobile Hero */}
-            {/* <div className=''>
-              <div className='lg:hidden md:hidden flex rounded-md sm:rounded-xl space-x-8'>
-                <div className='w-20 h-20 rounded-full bg-white flex items-center justify-center cursor-pointer hover:scale-125 hover:bg-gray-500 transition duration-200 ease-in-out'>
-                  <a href='https://github.com/JaguarsCodehub/'>
-                    <Image
-                      src='https://cdn-icons-png.flaticon.com/512/25/25231.png'
-                      className='w-8 h-8 rounded-sm'
-                      alt='Github'
-                      width={32}
-                      height={32}
-                    />
-                  </a>
-                </div>
-                <div className='w-20 h-20 rounded-full bg-blue-200 flex items-center justify-center cursor-pointer hover:scale-125 hover:bg-blue-300 transition duration-200 ease-in-out'>
-                  <a href='https://www.linkedin.com/in/jyotindra-tavanoji-41909317a/'>
-                    <Image
-                      src='https://upload.wikimedia.org/wikipedia/commons/thumb/c/ca/LinkedIn_logo_initials.png/800px-LinkedIn_logo_initials.png'
-                      className='w-8 h-8 rounded-sm'
-                      alt='LinkedIn'
-                      width={32}
-                      height={32}
-                    />
-                  </a>
-                </div>
-                <div className='w-20 h-20 rounded-full bg-red-200 flex items-center justify-center cursor-pointer hover:scale-125 hover:bg-red-200 transition duration-200 ease-in-out'>
-                  <a href='https://www.instagram.com/jyotindra.21/'>
-                    <Image
-                      src='https://upload.wikimedia.org/wikipedia/commons/thumb/e/e7/Instagram_logo_2016.svg/768px-Instagram_logo_2016.svg.png'
-                      className='w-8 h-8 rounded-sm'
-                      alt='Instagram'
-                      width={32}
-                      height={32}
-                    />
-                  </a>
-                </div>
-              </div>
-            </div> */}
-            {/* <div className='flex place-items-center ml-40 mt-10'>
-              <div className='w-20 h-20 rounded-full flex items-center justify-center cursor-pointer animate-bounce transition duration-700 ease-in-out'>
-                <svg
-                  xmlns='http://www.w3.org/2000/svg'
-                  className='h-10 w-10'
-                  viewBox='0 0 20 20'
-                  fill='currentColor'
-                >
-                  <path
-                    fillRule='evenodd'
-                    d='M14.707 12.293a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 111.414-1.414L9 14.586V3a1 1 0 012 0v11.586l2.293-2.293a1 1 0 011.414 0z'
-                    clipRule='evenodd'
-                    className='text-center justify-center'
-                  />
-                </svg>
-              </div>
-            </div> */}
+          <div className="flex flex-wrap gap-3 mt-8">
+            <a 
+              href="https://github.com/JaguarsCodehub/" 
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-2 px-5 py-2.5 bg-card/60 backdrop-blur-sm border border-border/80 rounded-full hover:bg-foreground hover:text-background hover:border-foreground transition-all duration-300 text-sm font-medium hover:shadow-[0_8px_30px_rgb(0,0,0,0.06)] dark:hover:shadow-[0_8px_30px_rgb(255,255,255,0.08)] hover:-translate-y-0.5 active:translate-y-0 active:scale-95"
+            >
+              <Github size={16} /> GitHub
+            </a>
+            <a 
+              href="https://x.com/jyotindrakt" 
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-2 px-5 py-2.5 bg-card/60 backdrop-blur-sm border border-border/80 rounded-full hover:bg-foreground hover:text-background hover:border-foreground transition-all duration-300 text-sm font-medium hover:shadow-[0_8px_30px_rgb(0,0,0,0.06)] dark:hover:shadow-[0_8px_30px_rgb(255,255,255,0.08)] hover:-translate-y-0.5 active:translate-y-0 active:scale-95"
+            >
+              <svg viewBox="0 0 24 24" aria-hidden="true" className="w-4 h-4 fill-current">
+                <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"></path>
+              </svg> 
+            </a>
+            <a 
+              href="https://www.linkedin.com/in/jyotindra-tavanoji-41909317a/" 
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-2 px-5 py-2.5 bg-card/60 backdrop-blur-sm border border-border/80 rounded-full hover:bg-foreground hover:text-background hover:border-foreground transition-all duration-300 text-sm font-medium hover:shadow-[0_8px_30px_rgb(0,0,0,0.06)] dark:hover:shadow-[0_8px_30px_rgb(255,255,255,0.08)] hover:-translate-y-0.5 active:translate-y-0 active:scale-95"
+            >
+              <Linkedin size={16} /> LinkedIn
+            </a>
           </div>
         </div>
-      </section>
-    </div>
+        
+        <div className="w-56 h-56 md:w-80 md:h-80 relative rounded-2xl overflow-hidden shrink-0 border-4 border-white shadow-lg glare-overlay">
+          <Image
+            src="https://avatars.githubusercontent.com/u/82316591?v=4"
+            alt="Jyotindra Tavanoji"
+            layout="fill"
+            objectFit="cover"
+            priority
+          />
+        </div>
+      </div>
+    </section>
   );
 };
 

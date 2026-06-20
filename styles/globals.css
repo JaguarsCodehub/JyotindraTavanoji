@@ -4,33 +4,33 @@
 
   @layer base {
     :root {
-      --background: 0 0% 100%;
-      --foreground: 240 10% 3.9%;
+      --background: 40 25% 96%;
+      --foreground: 215 28% 17%;
 
       --card: 0 0% 100%;
-      --card-foreground: 240 10% 3.9%;
+      --card-foreground: 215 28% 17%;
 
       --popover: 0 0% 100%;
-      --popover-foreground: 240 10% 3.9%;
+      --popover-foreground: 215 28% 17%;
 
-      --primary: 240 5.9% 10%;
-      --primary-foreground: 0 0% 98%;
+      --primary: 13 83% 51%;
+      --primary-foreground: 0 0% 100%;
 
-      --secondary: 240 4.8% 95.9%;
-      --secondary-foreground: 240 5.9% 10%;
+      --secondary: 40 10% 90%;
+      --secondary-foreground: 215 28% 17%;
 
-      --muted: 240 4.8% 95.9%;
-      --muted-foreground: 240 3.8% 46.1%;
+      --muted: 40 10% 90%;
+      --muted-foreground: 215 16% 47%;
 
-      --accent: 240 4.8% 95.9%;
-      --accent-foreground: 240 5.9% 10%;
+      --accent: 13 83% 51%;
+      --accent-foreground: 0 0% 100%;
 
       --destructive: 0 84.2% 60.2%;
       --destructive-foreground: 0 0% 98%;
 
-      --border: 240 5.9% 90%;
-      --input: 240 5.9% 90%;
-      --ring: 240 10% 3.9%;
+      --border: 40 15% 85%;
+      --input: 40 15% 85%;
+      --ring: 13 83% 51%;
 
       --radius: 0.5rem;
     }
@@ -72,5 +72,75 @@
     }
     body {
       @apply bg-background text-foreground;
+    }
+  }
+
+  @layer utilities {
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .no-scrollbar {
+      -ms-overflow-style: none;  /* IE and Edge */
+      scrollbar-width: none;  /* Firefox */
+    }
+  }
+
+  @keyframes glare {
+    0% {
+      transform: translate(-100%, -100%) rotate(45deg);
+    }
+    80% {
+      transform: translate(-100%, -100%) rotate(45deg);
+    }
+    100% {
+      transform: translate(100%, 100%) rotate(45deg);
+    }
+  }
+
+  @keyframes glare {
+    0% {
+      left: -150%;
+    }
+    80% {
+      left: -150%;
+    }
+    100% {
+      left: 150%;
+    }
+  }
+
+  .glare-overlay {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .glare-overlay::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -150%;
+    width: 150%;
+    height: 100%;
+    background: linear-gradient(
+      120deg,
+      rgba(255, 255, 255, 0) 30%,
+      rgba(255, 255, 255, 0.45) 50%,
+      rgba(255, 255, 255, 0) 70%
+    );
+    animation: glare 3s infinite ease-in-out;
+    pointer-events: none;
+  }
+
+  .glare-overlay:hover::after {
+    animation: glare 1.5s infinite ease-in-out;
+  }
+
+  @media (min-width: 768px) {
+    *, *::before, *::after {
+      cursor: none;
+    }
+    
+    a, button, [role="button"], a *, button *, input, select, textarea {
+      cursor: pointer !important;
     }
   }

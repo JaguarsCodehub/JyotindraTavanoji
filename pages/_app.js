@@ -1,13 +1,16 @@
 import '../styles/globals.css';
-import { Poppins } from 'next/font/google';
+import { Raleway } from 'next/font/google';
 import { Analytics } from '@vercel/analytics/react';
+import Layout from '../components/Layout';
 
-const poppins = Poppins({ weight: '500', subsets: ['latin'] });
+const raleway = Raleway({ subsets: ['latin'], variable: '--font-raleway' });
 
 function MyApp({ Component, pageProps }) {
   return (
-    <main className={poppins.className}>
-      <Component {...pageProps} />;
+    <main className={`${raleway.variable} font-sans`}>
+      <Layout>
+        <Component {...pageProps} />
+      </Layout>
       <Analytics />
     </main>
   );

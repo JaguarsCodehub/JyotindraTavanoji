@@ -1,0 +1,23 @@
+---
+title: "From Zero to Scale: Developing a robust Chat App with Redis, Node and Kafka."
+date: "2024-02-01"
+description: "Today I will explain how to create a highly scalable chat app with Node JS, Sockets, Redis Insight, Kafka, PostgreSQL and Turbo-repo."
+readTime: 8
+coverImage: "https://images.unsplash.com/photo-1614064641913-6b71a2eaa481?q=80&w=1000"
+---
+
+# From Zero to Scale: Developing a robust Chat App
+
+Building a chat application is a classic tutorial. Building a chat application that can actually scale to millions of concurrent messages without crashing? That requires serious system design.
+
+Today I will explain how to create a highly scalable chat architecture using:
+- **Node.js & WebSockets (Socket.io)** for real-time bidirectional communication
+- **Redis (and Redis Insight)** for pub/sub across multiple WebSocket server instances
+- **Apache Kafka** as a highly durable message queue for delayed database writes
+- **PostgreSQL** as the source of truth
+- **Turborepo** for managing the monorepo
+
+## The Architecture
+When a user sends a message, it hits the WebSocket server. The server instantly publishes the message to Redis so other connected users receive it in real-time. Simultaneously, it drops the message into a Kafka topic, where a dedicated worker safely persists it to PostgreSQL in the background.
+
+*Full content coming soon...*

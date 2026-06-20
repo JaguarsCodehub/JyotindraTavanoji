@@ -36,6 +36,10 @@ module.exports = {
       },
     },
     extend: {
+      fontFamily: {
+        sans: ['var(--font-raleway)', 'sans-serif'],
+        lora: ['var(--font-raleway)', 'sans-serif'],
+      },
       colors: {
         border: 'hsl(var(--border))',
         input: 'hsl(var(--input))',
@@ -94,6 +98,7 @@ module.exports = {
   },
   plugins: [
     require('tailwindcss-animate'),
+    require('@tailwindcss/typography'),
     addVariablesForColors,
     function ({ matchUtilities, theme }) {
       matchUtilities(
