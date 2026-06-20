@@ -111,7 +111,11 @@ export async function getStaticPaths() {
 
 export async function getStaticProps({ params }) {
   const project = getProjectBySlug(params.slug);
+  
+  // Exclude non-serializable 'image' property from props
+  const { image, ...serializableProject } = project || {};
+
   return {
-    props: { project }
+    props: { project: serializableProject }
   };
 }
