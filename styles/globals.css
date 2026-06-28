@@ -134,13 +134,4 @@
   .glare-overlay:hover::after {
     animation: glare 1.5s infinite ease-in-out;
   }
-
-  @media (min-width: 768px) {
-    *, *::before, *::after {
-      cursor: none;
-    }
-    
-    a, button, [role="button"], a *, button *, input, select, textarea {
-      cursor: pointer !important;
-    }
-  }
+

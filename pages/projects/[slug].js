@@ -25,7 +25,7 @@ export default function ProjectDetail({ project }) {
         {/* Header Section */}
         <div className="mb-16">
           <div className="text-5xl mb-6">{project.icon}</div>
-          <h1 className="font-lora text-4xl md:text-5xl font-bold text-foreground mb-6">
+          <h1 className="font-lora text-3xl md:text-4xl font-bold text-foreground mb-6">
             {project.title}
           </h1>
           <p className="text-muted-foreground text-lg mb-8 leading-relaxed max-w-2xl">

@@ -1,13 +1,16 @@
 import '../styles/globals.css';
-import { Raleway } from 'next/font/google';
+import { Montserrat } from 'next/font/google';
 import { Analytics } from '@vercel/analytics/react';
 import Layout from '../components/Layout';
 
-const raleway = Raleway({ subsets: ['latin'], variable: '--font-raleway' });
+const montserrat = Montserrat({ 
+  subsets: ['latin'], 
+  variable: '--font-montserrat' 
+});
 
 function MyApp({ Component, pageProps }) {
   return (
-    <main className={`${raleway.variable} font-sans`}>
+    <main className={`${montserrat.variable} font-sans`}>
       <Layout>
         <Component {...pageProps} />
       </Layout>

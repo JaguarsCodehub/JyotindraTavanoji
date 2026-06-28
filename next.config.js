@@ -17,6 +17,7 @@ const nextConfig = {
       'images.unsplash.com',
       'avatars.githubusercontent.com',
       'cdn.hashnode.com',
+      'media.licdn.com'
     ],
   },
   async redirects() {

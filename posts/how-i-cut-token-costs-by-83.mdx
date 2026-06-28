@@ -1,0 +1,351 @@
+---
+title: "How I Cut token costs by 83% in a Multi-Agent AI System 👾"
+date: "2026-06-28"
+description: "I made a massive blunder in delegating context to my multi-agent AI system, resulting in a 202k-token monster. Here is the exact architecture I used to drop token usage by 83% while actually improving the output."
+readTime: 8
+coverImage: "https://media.licdn.com/dms/image/v2/D4D22AQFKvVnrZamWcA/feedshare-shrink_800/B4DZ6H3vabJ4Ac-/0/1780395997198?e=1784160000&v=beta&t=BjiDblpKBqfNYJ3u6qIf9b21vX6iwfkGHfwrZVwGeQM"
+tags: ["AI", "LLM", "Context Engineering", "Architecture"]
+---
+
+I made a classic design blunder when building my multi-agent research engine. I fell into the trap of letting every agent share the same global context window. 
+
+At first, it felt clean and straightforward. But as the system scaled, it quickly spiraled into a **202,000+ token monster** that cost me around **$0.40 per run**.
+
+It took me a while to diagnose what was actually going wrong. I was dealing with:
+* **Higher costs**: 200k+ tokens per research loop adds up incredibly fast.
+* **Slower responses**: Waiting on the LLM to ingest hundreds of pages of raw data killed the latency.
+* **Context pollution**: Agents got easily distracted by system logs and unrelated tool traces.
+* **Duplicate reasoning**: Multiple agents repeatedly analyzed the same details because they shared a messy, monolithic memory.
+
+I tried to prompt my way out of this, but it didn't help. The model wasn't the issue. **The problem was purely my architecture.**
+
+By shifting my focus from prompting to **Context Engineering**, I implemented five architectural patterns that dropped my average research run from **202,530 tokens to just 33,700 tokens, yielding an 83.3% cost reduction**, while actually *improving* the focus and depth of the final reports.
+
+Here is the exact breakdown of how I did it, along with the actual Python and LangGraph implementations.
+
+---
+
+## The Root Cause: The "Monolithic Context" Anti-Pattern
+
+Most multi-agent tutorials teach a simple pattern: pass the entire message history and state dictionary from node to node. 
+
+```
+[Orchestrator]
+      │ (Passes ALL messages)
+      ▼
+  [Web Agent] ──(Runs Tavily searches, appends raw HTML/Markdown)──► [Doc Agent]
+                                                                          │ (Appends PDF texts)
+                                                                          ▼
+                                                                     [Fact Checker]
+                                                                          │ (Appends verifications)
+                                                                          ▼
+                                                                    [Writer Agent]
+                                                             (Context: 200k+ tokens!)
+```
+
+This is a ticking time bomb. The Web Agent’s internal tool calls (scraping results, raw logs) and the Doc Agent's text chunks get appended to the orchestrator’s global state. By the time the **Writer Agent** is reached, it has to sift through massive amounts of noisy logs to write a clean 1,000-word report.
+
+---
+
+## 1. Sub-Agent Context Isolation (The Black Box Pattern)
+
+Instead of sharing one giant message thread, every agent in my system is now treated as an isolated **Black Box**. 
+
+Each sub-agent (e.g., `WebAgent`, `DocAgent`) maintains a **private, local** `messages` list. The raw tool logs, intermediate thought steps, and raw search outputs remain entirely within the sub-agent’s memory. Once the agent completes its run, it serializes its output into a structured **Pydantic model** and returns only the final summary back to the Orchestrator.
+
+Here is how I implemented this inside the `WebAgent.run` method:
+
+```python
+# agents/web_agent.py
+class WebAgent:
+    @traceable(name="WebAgent.run")
+    async def run(self, task: WebTask) -> WebResult:
+        # 1. Initialize PRIVATE local context history
+        messages = [
+            {"role": "system", "content": WEB_AGENT_PROMPT},
+            {"role": "user", "content": f"Please research these queries: {task.queries}"}
+        ]
+        
+        num_embeddings_stored = 0
+        total_prompt_tokens = 0
+        total_completion_tokens = 0
+        
+        for step in range(5):
+            response = await client.chat.completions.create(
+                model=WORKER_MODEL,
+                messages=messages,
+                tools=TOOLS_SCHEMA,
+                tool_choice="auto"
+            )
+            
+            # Record local usage
+            usage = response.usage
+            global_tracker.add_cost("worker", usage.prompt_tokens, usage.completion_tokens)
+            total_prompt_tokens += usage.prompt_tokens
+            total_completion_tokens += usage.completion_tokens
+            
+            message = response.choices[0].message
+            messages.append(message) # Local append only
+            
+            if not message.tool_calls:
+                # Compile private loop findings into a structured response
+                res_dict = json.loads(clean_json_blocks(message.content))
+                return WebResult(
+                    sources=[Source(**s) for s in res_dict.get("sources", [])],
+                    claims=res_dict.get("claims", []),
+                    embeddings_stored=num_embeddings_stored,
+                    prompt_tokens=total_prompt_tokens,
+                    completion_tokens=total_completion_tokens
+                )
+            
+            # Execute tools in parallel internally
+            tool_results = await asyncio.gather(*[execute_tool(tc) for tc in message.tool_calls])
+            messages.extend(tool_results)
+```
+
+### Why this saves tokens:
+The Orchestrator’s global state (e.g. `ResearchState` in LangGraph) only receives the clean list of claims and URLs. The 15,000+ tokens of raw search scraping results and tool execution traces are garbage collected when `WebAgent.run` exits.
+
+---
+
+## 2. JIT (Just-in-Time) Document Loading via Pinecone RAG
+
+Dumping a 100-page financial PDF into an LLM context is expensive and causes severe retrieval degradation. 
+
+Instead of pre-loading entire documents, my `DocAgent` uses a **Just-in-Time (JIT)** loading paradigm. We parse and chunk documents using a background pipeline, embed them using OpenAI’s `text-embedding-3-small`, and store them in **Pinecone**. The agent is then equipped with tools to selectively search this vector database.
+
+To ensure the agent receives the highest signal chunks without bloat, I implemented **Cohere Reranking** (`rerank-english-v3.0`) on top of Pinecone's vector similarity scoring:
+
+```python
+# tools/pinecone_tools.py
+import cohere
+from config import COHERE_RERANK_API_KEY
+
+cohere_client = cohere.AsyncClient(COHERE_RERANK_API_KEY) if COHERE_RERANK_API_KEY else None
+
+async def rag_query_pinecone(query: str, top_k: int = 5) -> str:
+    # 1. Fetch twice the target chunks from Pinecone initially
+    fetch_k = top_k * 2 if cohere_client else top_k
+    results = await store.search(query, top_k=fetch_k)
+    
+    if not results:
+        return "No relevant context found in memory."
+        
+    docs_for_rerank = [{
+        "text": m["metadata"].get("text", ""),
+        "source": m["metadata"].get("source_url", "Unknown Source")
+    } for m in results]
+    
+    # 2. Apply Cohere Reranking to extract top-K high-signal context
+    if cohere_client:
+        rerank_results = await cohere_client.rerank(
+            query=query,
+            documents=[d["text"] for d in docs_for_rerank],
+            top_n=top_k,
+            model="rerank-english-v3.0"
+        )
+        
+        contexts = []
+        for result in rerank_results.results:
+            doc = docs_for_rerank[result.index]
+            contexts.append(f"Source: {doc['source']} (Relevance: {result.relevance_score:.2f})\nText: {doc['text']}")
+    else:
+        # Fallback
+        contexts = [f"Source: {d['source']}\nText: {d['text']}" for d in docs_for_rerank[:top_k]]
+        
+    return "\n\n---\n\n".join(contexts)
+```
+
+### Why this saves tokens:
+Instead of sending **80,000 tokens** of raw PDF text, the `DocAgent` retrieves exactly 4 to 5 high-signal chunks matching its query, reducing the payload to **~4,000 tokens** without losing critical details.
+
+---
+
+## 3. The Execution Gate (Capping Search Loops)
+
+Autonomous agents are notorious for falling into reasoning loops. An agent might decide to search the web, store details to Pinecone, analyze a claim, and then run *another* search to verify a detail from the first search, looping 10+ times.
+
+To mitigate this, I built a simple, highly effective **Execution Gate** inside the worker run loop. We dynamically override the LLM's `tool_choice` parameter based on the current loop iteration:
+
+```python
+# Inside WebAgent.run's loop:
+for step in range(5):
+    # After step 2, don't let the agent call more tools — force a summary response
+    # This prevents expensive, redundant search round-trips
+    active_tool_choice = "auto" if step < 2 else "none"
+    
+    response = await client.chat.completions.create(
+        model=WORKER_MODEL,
+        messages=messages,
+        tools=TOOLS_SCHEMA,
+        tool_choice=active_tool_choice
+    )
+```
+
+### Why this saves tokens:
+By forcing `tool_choice="none"` after step 2, we terminate the planning agent's tool-calling cycle. The agent is forced to synthesize its existing findings and return them, eliminating waste from infinite search loops.
+
+---
+
+## 4. The Compaction Gate (The tiktoken Guard)
+
+In a multi-agent system, the output of previous steps (Web Agent sources, Doc Agent analysis, Fact Checker verifications) must be passed to the final **Writer Agent** to produce the final report. 
+
+If my research path encounters multiple disputes or a high volume of sources, this context can easily grow beyond 15,000 tokens. To handle this gracefully, I built a **Compaction Gate** in the Orchestrator's `writer_node` using `tiktoken` to enforce a token checkpoint:
+
+```python
+# agents/orchestrator.py
+from utils.token_tracker import get_token_count # tiktoken wrapper
+
+@traceable(name="Orchestrator.writer_node")
+async def writer_node(self, state: ResearchState) -> dict:
+    context = {
+        "web_sources": state.get("web_sources", []),
+        "doc_analysis": state.get("doc_analysis", []),
+        "verifications": state.get("verifications", [])
+    }
+    
+    findings_text = json.dumps(context, default=str)
+    findings_tokens = get_token_count(findings_text) # Measures actual GPT-4o tokens
+    warnings = state.get("context_warnings", [])
+    
+    if findings_tokens > 15000:
+        AgentLogger.orchestrator(f"⚡ COMPACTION TRIGGERED! Context is {findings_tokens:,} tokens.")
+        warnings.append(f"Writer input was {findings_tokens} tokens before compaction.")
+        
+        # Call a fast compaction LLM to distill context
+        compact_response = await compact_client.chat.completions.create(
+            model=ORCHESTRATOR_MODEL,
+            messages=[
+                {"role": "system", "content": "You are an expert editor. Compress the given data into a dense structured summary (under 3000 words). Preserve all specific numbers, names, citations, judgments, conflict notes, and facts. Discard narrative fluff and pure repetition."},
+                {"role": "user", "content": findings_text}
+            ],
+            max_tokens=3000
+        )
+        
+        # Track compaction costs and substitute context
+        context = {"compressed_findings": compact_response.choices[0].message.content}
+        state["compaction_count"] = state.get("compaction_count", 0) + 1
+    
+    # Generate final output
+    markdown_report = await self.writer_agent.run(state["topic"], context)
+```
+
+### Why this saves tokens:
+The Writer Agent receives a dense, structured summary of findings (~3,000 tokens) instead of a massive, unorganized blob of JSON logs (15,000+ tokens). The model writes faster, adheres closer to formatting instructions, and never loses context.
+
+---
+
+## 5. Fan-out Fact-Checking (Parallel Isolation)
+
+In our research engine, we verify claims extracted by the Web and Doc agents. If we feed all 8-10 claims to a single Fact Checker agent, the prompt context size explodes, and the agent loses focus. 
+
+Instead, I use a **Fan-Out** architecture. The Orchestrator splits the list of claims and spawns **N parallel Fact Checker agents** (one per claim) using `asyncio.gather`:
+
+```python
+# agents/orchestrator.py
+@traceable(name="Orchestrator.fact_check_node")
+async def fact_check_node(self, state: ResearchState) -> dict:
+    all_claims = list(set(state.get("web_claims", []) + state.get("doc_claims", [])))
+    
+    if not all_claims:
+        return {"verifications": [], "disputed_count": 0}
+        
+    # Fan out: Spawn individual fact checkers in parallel
+    tasks = [
+        self.fact_agent.run(FactTask(
+            claims=[claim], 
+            query_context=state["topic"], 
+            session_id=str(uuid.uuid4())
+        ))
+        for claim in all_claims
+    ]
+    
+    results = await asyncio.gather(*tasks)
+    
+    # Flatten verifications
+    verifications = []
+    for fact_result in results:
+        verifications.extend([v.model_dump() for v in fact_result.verifications])
+        
+    disputed = [v for v in verifications if v.get("verdict") == "DISPUTED"]
+```
+
+### Why this saves tokens:
+Each Fact Checker agent receives a highly targeted context consisting of just **one claim** and the specific query context. This avoids context pollution and ensures the prompt stays extremely small (~1,000 tokens per sub-agent), which also enables OpenAI to utilize **Prompt Caching** (since the system prompt is static and identical).
+
+---
+
+## The Results: Before vs. After Metrics
+
+By tracking token metrics via LangSmith and our internal cost trackers, we measured the impact of these changes. Here is the before and after token usage for a standard financial audit run (analyzing live news + quarterly earnings reports):
+
+<div className="overflow-x-auto my-8 border border-border rounded-lg">
+  <table className="min-w-full divide-y divide-border text-sm">
+    <thead className="bg-muted/50">
+      <tr>
+        <th className="px-4 py-3 text-left font-semibold text-foreground">Agent / Graph Node</th>
+        <th className="px-4 py-3 text-center font-semibold text-foreground">Before (Tokens)</th>
+        <th className="px-4 py-3 text-center font-semibold text-foreground">After (Tokens)</th>
+        <th className="px-4 py-3 text-left font-semibold text-foreground">Optimization Applied</th>
+      </tr>
+    </thead>
+    <tbody className="divide-y divide-border">
+      <tr>
+        <td className="px-4 py-3 font-semibold text-foreground">Orchestrator Node</td>
+        <td className="px-4 py-3 text-center text-muted-foreground">45,230</td>
+        <td className="px-4 py-3 text-center font-bold text-primary">4,100</td>
+        <td className="px-4 py-3 text-muted-foreground">Message/Log Isolation (Sees only summaries)</td>
+      </tr>
+      <tr className="bg-muted/10">
+        <td className="px-4 py-3 font-semibold text-foreground">Doc Agent (RAG)</td>
+        <td className="px-4 py-3 text-center text-muted-foreground">38,100</td>
+        <td className="px-4 py-3 text-center font-bold text-primary">8,200</td>
+        <td className="px-4 py-3 text-muted-foreground">JIT Loading via Pinecone + Cohere Rerank</td>
+      </tr>
+      <tr>
+        <td className="px-4 py-3 font-semibold text-foreground">Web Agent (Search)</td>
+        <td className="px-4 py-3 text-center text-muted-foreground">22,400</td>
+        <td className="px-4 py-3 text-center font-bold text-primary">6,400</td>
+        <td className="px-4 py-3 text-muted-foreground">Private Context + Tool Choice Iteration Capping</td>
+      </tr>
+      <tr className="bg-muted/10">
+        <td className="px-4 py-3 font-semibold text-foreground">Fact Checker Node</td>
+        <td className="px-4 py-3 text-center text-muted-foreground">41,000</td>
+        <td className="px-4 py-3 text-center font-bold text-primary">5,800</td>
+        <td className="px-4 py-3 text-muted-foreground">Parallel Fan-Out (Focused, smaller context)</td>
+      </tr>
+      <tr>
+        <td className="px-4 py-3 font-semibold text-foreground">Writer Node</td>
+        <td className="px-4 py-3 text-center text-muted-foreground">55,800</td>
+        <td className="px-4 py-3 text-center font-bold text-primary">9,200</td>
+        <td className="px-4 py-3 text-muted-foreground">Compaction Gate (Distilled input summary)</td>
+      </tr>
+      <tr className="bg-primary/5 font-bold">
+        <td className="px-4 py-3 text-foreground">TOTAL TOKENS</td>
+        <td className="px-4 py-3 text-center text-foreground">202,530</td>
+        <td className="px-4 py-3 text-center text-primary">33,700</td>
+        <td className="px-4 py-3 text-primary">83.3% Cost Reduction</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+### Additional Wins:
+* **Cache Hit Rate:** **74%** on system prompts. By keeping system prompts static and separating dynamic variables cleanly, the LLM provider caches the system instructions, reducing the cost of prompt input tokens by an additional **50%**.
+* **Speed:** The total run time dropped from **160 seconds** to **42 seconds** due to parallel fan-out and bypassing slow website crawls.
+* **Output Quality:** The Writer Agent no longer hallucinated citations because the input was condensed into a clean, dispute-resolved structured summary.
+
+---
+
+## The mistakes that led to this
+
+1. **Context windows are not RAM.** Just because an LLM has a 128k or 1M context window doesn't mean you should fill it. Accuracy degrades long before the window overflows.
+2. **Design isolated sub-graphs.** Let agents run their complex, tool-heavy reasoning loops in isolation. Ensure they return small, structured Pydantic models back to the parent orchestrator.
+3. **Use the Compaction Gate pattern.** Always count your tokens before sending payloads to a summarizing or writing agent. If it's too big, trigger a fast compaction step.
+
+"Context Engineering is not about prompting. It's about architecture." Most AI systems don't fail because of model quality. They fail because too much irrelevant information reaches the model.
+
+Hope you found something useful here.
+
+— Jyotindra

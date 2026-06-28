@@ -37,8 +37,8 @@ module.exports = {
     },
     extend: {
       fontFamily: {
-        sans: ['var(--font-raleway)', 'sans-serif'],
-        lora: ['var(--font-raleway)', 'sans-serif'],
+        sans: ['var(--font-montserrat)', 'sans-serif'],
+        lora: ['var(--font-montserrat)', 'sans-serif'],
       },
       colors: {
         border: 'hsl(var(--border))',

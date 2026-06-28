@@ -10,7 +10,7 @@ export default function Papershelf() {
       <div className="max-w-4xl mx-auto px-6 py-20 relative min-h-screen">
         <div className="mb-12">
           <div className="flex items-baseline gap-4 mb-6">
-            <h1 className="font-lora text-4xl md:text-5xl font-bold text-foreground">Papershelf</h1>
+            <h1 className="font-lora text-3xl md:text-4xl font-bold text-foreground">Papershelf</h1>
             <span className="font-mono text-xl text-muted-foreground">({papers.length})</span>
           </div>
           <p className="text-foreground/80 leading-relaxed mb-4">

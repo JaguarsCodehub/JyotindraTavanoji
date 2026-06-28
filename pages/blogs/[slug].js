@@ -36,7 +36,7 @@ export default function Post({ postData }) {
 
         {/* Header */}
         <div className="mb-12 border-b border-border/50 pb-8">
-          <h1 className="font-lora text-4xl md:text-5xl font-bold text-foreground mb-6 leading-tight">
+          <h1 className="font-lora text-3xl md:text-4xl font-bold text-foreground mb-6 leading-tight">
             {postData.title}
           </h1>
           <div className="flex items-center gap-4 text-muted-foreground font-mono text-sm">
@@ -59,6 +59,19 @@ export default function Post({ postData }) {
         </div>
 
         {/* Content */}
+        {postData.source === 'hashnode' && (
+          <div className="mb-8 p-4 bg-primary/10 border-l-4 border-primary rounded-r-md text-foreground">
+            The blog was originally written on hashnode - please visit here{' '}
+            <a 
+              href={postData.url || `https://jyotindra-kt.hashnode.dev/${postData.slug}`} 
+              target="_blank" 
+              rel="noopener noreferrer" 
+              className="font-bold underline text-primary hover:text-primary/80 transition-colors"
+            >
+              Hashnode Link
+            </a>
+          </div>
+        )}
         <div className="prose prose-lg dark:prose-invert prose-a:text-primary hover:prose-a:text-primary/80 prose-headings:font-lora max-w-none text-foreground/90">
           <MDXRemote {...postData.mdxSource} />
         </div>
