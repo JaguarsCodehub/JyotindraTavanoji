@@ -1,0 +1,91 @@
+---
+source: coda
+title: "🛍️ handling high-concurrency inventory: the reservation pattern"
+date: "2026-06-25"
+description: "When 10,000 people click 'Checkout' at the exact same millisecond for the last 100 items, how do you ensure you only sell exactly 100?"
+readTime: 5
+---
+
+If you've ever tried to buy tickets for a massive concert or snag a PlayStation 5 during a restock, you've participated in one of the most difficult engineering challenges in e-commerce: high-concurrency inventory management.
+
+When 10,000 people click "Checkout" at the exact same millisecond for the last 100 items, how do you ensure you only sell exactly 100? More importantly, how do you handle users who start checking out, but whose credit cards ultimately decline 5 minutes later?
+
+The answer lies in moving away from simple addition/subtraction, and adopting the Inventory Reservation Pattern.
+
+### The Naive Approach: Read-Then-Write
+
+Most developers build their first inventory system like this:
+
+```javascript
+// The Application-Level Check
+const stock = await db.query('SELECT quantity FROM inventory WHERE product_id = X');
+
+if (stock >= requestedAmount) {
+    await db.query('UPDATE inventory SET quantity = quantity - requestedAmount');
+    await processPayment();
+}
+```
+
+This code has two fatal flaws:
+
+1. **The Race Condition**: If 100 users hit this code concurrently, all 100 will execute the `SELECT` statement before any `UPDATE` occurs. All 100 users will see `stock = 100`, and your system will happily sell 10,000 items you don't have.
+2. **The Payment Limbo**: If you subtract the inventory before the payment processes, what happens if the payment fails? You have to manually add the inventory back. If your server crashes during the payment process, that inventory is permanently lost to the void.
+
+### The Solution: The Reservation Pattern
+
+To build a resilient system, we need to stop thinking about inventory as a single number. Instead, inventory exists in three states:
+
+1. **Quantity**: The total physical items sitting in the warehouse.
+2. **Reserved**: Items currently "on hold" because a user is in the middle of a checkout flow.
+3. **Available**: A calculated value (`Quantity - Reserved`). This is what you display to users on the frontend.
+
+When a user clicks "Checkout", we don't subtract from the physical quantity. We simply increment the `Reserved` counter.
+
+* If their payment succeeds, we finalize the order and decrement the physical quantity (and reset the reservation).
+* If their payment fails, we simply release the hold by decrementing the `Reserved` counter. The physical stock was never touched.
+
+### The Magic SQL Query
+
+The architectural concept is great, but how do we actually prevent the race condition? Do we need complex distributed locks like Redis or ZooKeeper?
+
+No. Relational databases like PostgreSQL are incredibly powerful, and we can solve the concurrency problem with a single, elegant SQL query:
+
+```sql
+UPDATE inventory 
+SET reserved = reserved + $1, 
+    updated_at = NOW()
+WHERE product_id = $2 
+  AND (quantity - reserved) >= $1
+RETURNING id;
+```
+
+Let's break down why this is the only query you need:
+
+#### 1. Let the Database do the Math
+
+Notice that we aren't using a `SELECT` statement to check the stock in our application code. By moving the mathematical check `(quantity - reserved) >= $1` directly into the `WHERE` clause of the `UPDATE` statement, we leverage the database's native ACID compliance.
+
+#### 2. Implicit Row-Level Locking
+
+When PostgreSQL executes an `UPDATE` statement, it automatically acquires a row-level lock. If 100 requests hit this query at the exact same microsecond, the database forces them into a queue and processes them sequentially.
+
+#### 3. The WHERE Clause Filter
+
+Because they are processed sequentially, the database evaluates `(quantity - reserved) >= $1` for every single request based on the most recently committed data. Once the available stock hits zero, the `WHERE` clause evaluates to `FALSE` for all subsequent requests in the queue.
+
+#### 4. The RETURNING Keyword
+
+If the `WHERE` clause evaluates to `FALSE`, the database simply updates 0 rows. By appending `RETURNING id`, our backend code can easily inspect the result:
+
+```javascript
+const updateResult = await client.query(sqlString, [requestedQuantity, productId]);
+
+if (updateResult.rowCount === 0) {
+    throw new Error('Out of stock!');
+}
+// Proceed to Payment Service...
+```
+
+### Conclusion
+
+Building distributed e-commerce backends (especially event-driven systems using Kafka or RabbitMQ) requires strict data boundaries. By implementing the Inventory Reservation Pattern and leveraging native database locks, you can handle massive traffic spikes, prevent overselling, and never lose track of a single item in your warehouse.

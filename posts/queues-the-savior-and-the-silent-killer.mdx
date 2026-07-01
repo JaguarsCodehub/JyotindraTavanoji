@@ -1,0 +1,27 @@
+---
+source: coda
+title: "⛰️ queues: the savior and the silent killer"
+date: "2026-06-29"
+description: "Message queues buffer requests between services. They are widely used for heavy asynchronous tasks like processing video uploads, sending bulk emails, or handling massive spikes in traffic."
+readTime: 4
+---
+
+### Meaning & Context
+
+Message queues (e.g., Celery, BullMQ, AWS SQS) buffer requests between services. They are widely used for heavy asynchronous tasks like processing video uploads, sending bulk emails, or handling massive spikes in traffic.
+
+### Why it saves your system
+
+A queue acts as a shock absorber. If your system normally handles 100 requests/sec but suddenly gets hit with 10,000 requests/sec during a flash sale, the queue prevents your database and internal services from crashing by holding the requests safely until your workers can process them at a steady pace.
+
+### Why it silently kills your system
+
+If the rate of incoming messages permanently exceeds the rate at which your workers can process them, the queue begins to grow indefinitely. This is called queue backup.
+
+As memory or disk usage fills up, it can crash the queue broker itself. More dangerously, it creates a terrible user experience: the system looks "operational" because it accepts requests with a 202 Accepted, but the actual task might sit in the queue for hours. By the time it's processed, the data is irrelevant, or the user has already retried 20 times, compounding the backlog.
+
+### The Solution
+
+* **Dead Letter Queues (DLQ) & TTL**: Set a Time-To-Live on messages so stale requests drop off automatically, and move failing messages to a DLQ rather than retrying them indefinitely.
+* **Autoscaling Workers**: Set up scaling policies that spin up more worker instances based on queue depth (the number of backlogged messages).
+* **Backpressure and Rate Limiting**: When the queue reaches a critical threshold, reject new incoming requests at the API gateway level (429 Too Many Requests) to protect the system.

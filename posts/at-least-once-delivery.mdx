@@ -1,0 +1,20 @@
+---
+source: coda
+title: "🚚 at least once delivery"
+date: "2026-07-01"
+description: "At-least-once delivery is a message delivery guarantee where the system ensures that a message is delivered to the recipient at least one time."
+readTime: 3
+---
+
+At-least-once delivery is a message delivery guarantee where the system ensures that a message is delivered to the recipient at least one time. It is heavily used in message queues, event-driven architectures, and pub/sub systems (e.g., Apache Kafka, AWS SQS, RabbitMQ) where losing data is not an option.
+
+### Why it creates duplicate side effects
+
+In a perfect world, the consumer processes the message and sends an acknowledgment (ACK) back to the broker. However, networks fail. If the consumer successfully processes the message but the ACK drops on its way back, or if the consumer takes too long and the broker times out, the broker assumes the message was lost.
+
+The broker then redelivers the exact same message. If your consumer blindly executes the business logic again (like charging a credit card or deducting inventory), you get duplicate side effects.
+
+### The Solution
+
+* **Idempotency Keys**: Assign a unique ID to every operation. Before executing the side effect, the consumer checks a fast data store (like Redis or a unique database constraint) to see if that ID has already been processed. If it has, the consumer simply skips the work and ACKs the message.
+* **Idempotent Operations**: Design state changes as absolute assignments rather than relative ones (e.g., SET status = 'PAID' instead of DECREMENT balance BY 10).

@@ -1,0 +1,23 @@
+---
+source: coda
+title: "🔌 the one missing index: explain analyze"
+date: "2026-06-28"
+description: "When a query runs without an index on a large table, the database is forced to perform a Full Table Scan. Here's how to fix it."
+readTime: 3
+---
+
+### Meaning & Context
+
+An index is a database structure (usually a B-Tree) that allows the database engine to find specific rows instantly without scanning the entire table. It is used on columns that are frequently queried or used in `WHERE`, `JOIN`, or `ORDER BY` clauses.
+
+### Why it makes your whole service look "down"
+
+When a query runs without an index on a large table, the database is forced to perform a Full Table Scan. It has to read every single row from the disk into memory to find the matching data.
+
+If a highly frequent API endpoint triggers a full table scan on a table with millions of rows, it spikes the database CPU to 100%. Because the database is entirely consumed by this massive scanning operation, it cannot process any other queries. Connection pools fill up, other unrelated APIs time out waiting for the database, health checks fail, and the entire application tier locks up. To the outside world, your entire platform appears completely offline.
+
+### The Solution
+
+* **Query Profiling (EXPLAIN)**: Run `EXPLAIN ANALYZE` on your slow or high-frequency queries to ensure they are utilizing indexes and not executing sequential table scans.
+* **Database Guardrails**: Enable query timeouts at the database configuration level so a single unoptimized query is forcefully terminated before it consumes all CPU cycles.
+* **Performance Monitoring**: Use tools like pgHero, AWS Performance Insights, or Datadog to flag slow-running queries and missing index suggestions automatically before they hit production.

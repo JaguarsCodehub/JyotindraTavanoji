@@ -13,16 +13,16 @@ export default function Home({ recentPosts }) {
       <Head>
         <title>Jyotindra Tavanoji</title>
         <meta name='description' content='Fullstack engineering, devops, and systems.' />
-        <link rel='icon' href='/logo.png' />
+
       </Head>
 
       <Hero />
 
       <section className="max-w-6xl mx-auto px-6 py-12">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-16">
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-12 lg:gap-16">
           
           {/* Recent Blogs */}
-          <div>
+          <div className="md:col-span-7 lg:col-span-8">
             <h2 className="font-lora text-2xl font-bold text-foreground mb-6 flex items-center justify-between">
               Recent blog posts
               <Link href="/blogs" className="text-sm text-primary hover:underline flex items-center gap-1 font-sans font-medium">
@@ -50,7 +50,7 @@ export default function Home({ recentPosts }) {
           </div>
 
           {/* Recent Papers */}
-          <div>
+          <div className="md:col-span-5 lg:col-span-4">
             <h2 className="font-lora text-2xl font-bold text-foreground mb-6 flex items-center justify-between">
               Recent papers
               <Link href="/papershelf" className="text-sm text-primary hover:underline flex items-center gap-1 font-sans font-medium">

@@ -1,0 +1,117 @@
+---
+source: coda
+title: "🔑 idempotency is not just a backend buzz"
+date: "2026-06-26"
+description: "Idempotency isn't just a backend buzzword; it's a cross-stack contract. Here is how to implement it correctly."
+readTime: 6
+---
+
+So this goes back in 2025 when I was trying to learn about idempotency and thought that we need to make our requests idempotent by configuring everything in the backend api itself, then I did some LLM session with ChatGPT and Claude and got to know that, frontend client handling is also equally responsible... as any other engineer I did not trust the LLM and went straight ahead to read Stripe Documentations (the best in the business of idempotency).
+
+There I got to know that okay the client side should be just sending it in the Req header that's it. 
+
+If you're building a modern distributed system—like an e-commerce backend, a payment gateway, or a booking system → you are inevitably going to face the "double-charge" problem. 
+
+### Going one step ahead and implementing a cache to maintain the keys
+
+Another thing we can do in the later stages of development is storing those idempotency keys in the in-memory database for 24h (TTL: 24h) and if a request is already been processed then just show their cached response to them, and if it's a failing / failed idempotent key then we can retry it later.
+
+### Scenario: I was charged twice problem…
+
+A user spends twenty minutes carefully curating their shopping cart. They hit the "Pay Now" button. A loading spinner appears. A few seconds pass, and suddenly, their Wi-Fi drops. The frontend, receiving a timeout error, automatically retries the API request to ensure a smooth user experience. 
+
+When the user's connection returns, they are greeted with a success screen. But moments later, their phone buzzes with two identical charge notifications from their bank.
+
+What went wrong? And more importantly, whose fault is it? 
+
+As backend engineers, we often assume that data integrity is solely our domain. However, solving this specific distributed systems problem requires a critical shift in perspective: the frontend must take the lead.
+
+Here is a deep dive into API Idempotency, why the backend can't solve it alone, and the industry-standard pattern for building resilient integrations.
+
+### The Network Illusion and The Retry Problem
+
+In a perfect world, a REST API call consists of two guaranteed steps:
+
+1. The client sends a request.
+2. The server processes it and sends a response.
+
+In reality, networks are deeply unreliable. A failure can happen during the client’s transmission, during the server’s processing, or → most dangerously → during the server’s response transmission.
+
+When a client doesn’t receive a response (due to a timeout or connection drop), it enters a state of uncertainty. Did the server never receive the request? Or did the server process it successfully, but the network swallowed the 200 OK response?
+
+To build resilient applications, frontends and mobile apps are heavily incentivized to implement automatic retries using exponential backoff. But if the backend successfully processed the first request and the frontend blindly fires the exact same request a second time, the backend will treat it as a brand-new transaction. The result? Duplicate orders, double billing, and angry customers.
+
+### Why the Database ID is Not Enough
+
+A common architectural misconception is that the backend can simply use the `order_id` or a unique database constraint to prevent duplicates.
+
+The flaw in this logic is simple: The frontend doesn’t know the ID yet.
+
+When making a POST request to create a resource, the database is typically responsible for generating the primary key (e.g., a UUID or an auto-incrementing integer). If the first request succeeds but the response is lost, the frontend has no idea what ID was assigned. When the frontend retries the request, the backend has no context linking this new request to the previous one, so it happily generates a second ID and processes the payment again.
+
+### The Industry Standard: Client-Generated Idempotency Keys
+
+To solve this, industry leaders like Stripe pioneered and popularized the concept of Client-Generated Idempotency Keys.
+
+An operation is considered idempotent if performing it multiple times yields the same result as performing it exactly once. While GET, PUT, and DELETE requests are naturally idempotent, POST requests are not. We have to enforce idempotency artificially.
+
+Here is how the standard pattern works:
+
+#### 1. The Frontend Generates a Key per Operation
+
+When the user clicks the “Checkout” button, the frontend immediately generates a high-entropy, unique identifier—typically a Version 4 UUID. This is the Idempotency Key.
+
+It is crucial that this key is generated once per user intent, not once per API fetch attempt.
+
+#### 2. The Key is Sent via Headers
+
+The frontend attaches this key to the API request, strictly using the `Idempotency-Key` HTTP header.
+
+```javascript
+// Inside the frontend Checkout Component
+async function handleCheckout() {
+  // Generated ONCE when the user clicks the button
+  const idempotencyKey = crypto.randomUUID(); 
+  
+  let success = false;
+  let attempts = 0;
+  
+  while (!success && attempts < 3) {
+    try {
+      await fetch('/api/orders', {
+        method: 'POST',
+        headers: { 
+          'Content-Type': 'application/json',
+          'Idempotency-Key': idempotencyKey // Remains identical across retries
+        }, 
+        body: JSON.stringify(cartPayload)
+      });
+      success = true;
+    } catch (error) {
+      attempts++;
+      // Wait before retrying (Exponential Backoff)
+    }
+  }
+}
+```
+
+#### 3. The Backend Enforces the Constraint
+
+When the backend receives the request, it extracts the `Idempotency-Key` and checks its database (or a fast key-value store like Redis).
+
+* **If the key does not exist**: The backend processes the order, charges the card, saves the result, and stores the Idempotency Key alongside the record.
+* **If the key already exists**: The backend recognizes that this is a retry of an already-processed operation. It completely bypasses the business logic (no database inserts, no payment gateway calls) and simply returns the cached success response from the original attempt.
+
+### The Paradigm Shift
+
+This pattern reveals a fascinating truth about modern system architecture: Backend resilience is inherently tied to frontend state management.
+
+If the frontend generates a new key on every retry attempt, the entire idempotency layer is rendered useless. The frontend must carefully scope the generation of this key to the lifecycle of the specific user action (e.g., binding it to the checkout component’s state upon button click).
+
+By delegating the responsibility of unique identification to the client before the network layer is even involved, we eliminate the uncertainty of dropped connections.
+
+### Conclusion
+
+Building an event-driven, distributed backend (like an Order Booking System using Kafka) is thrilling, but it amplifies the need for strict data integrity.
+
+Idempotency isn’t just a backend buzzword; it’s a cross-stack contract. By passing an `Idempotency-Key` from the client to the server, you protect your system and ensuring that a user’s intent is respected → exactly once.

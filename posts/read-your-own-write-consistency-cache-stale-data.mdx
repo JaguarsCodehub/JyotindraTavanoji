@@ -1,0 +1,72 @@
+---
+source: coda
+title: "🔀 read-your-own-write consistency: cache stale data"
+date: "2026-06-27"
+description: "RYOW is a guarantee that whenever user updates a piece of data, they will always see that updated piece of data irrespective of how frequently they are querying."
+readTime: 5
+---
+
+### RYOW Consistency
+
+Route read requests from the specific user who just performed a write to the primary database for a short window (e.g., 5 seconds) before failing back to replicas.
+
+RYOW is a guarantee that whenever user updates a piece of data, they will always see that updated piece of data irrespective of how frequently they are querying.
+
+Crucially, this guarantee only applies to the updater. It does not guarantee that other users will see the update immediately—just that the person who made the change won't see their own stale data.
+
+### The problem it solves
+
+Imagine you update your profile biography on a social media app. You click "Save," the page refreshes, and... your old biography is still there. You click "Save" again, get frustrated, refresh, and suddenly the new biography appears.
+
+This happens because of Asynchronous Replication Lag. Your update went to the Primary DB, but your instant refresh read from a Read Replica that hadn't caught up yet. RYOW eliminates this jarring user experience.
+
+### When Is It Needed? (Crucial Use Cases)
+
+You need RYOW consistency whenever a user's workflow depends on the immediate visual or functional validation of an action they just took.
+
+* **User Profiles and Settings**: Changing passwords, updating email addresses, or modifying avatars.
+* **E-Commerce Carts and Checkouts**: Adding an item to a cart or applying a coupon code. If a user clicks "Apply 20% Off" and the total doesn't change on the next screen, they will abandon the cart.
+* **Social Media & Content Creation**: Publishing a post, dropping a comment, or hitting "Like." The author needs to see their comment appear instantly in the thread.
+* **Financial/Ledger Entries**: Moving money or updating a budget category.
+
+### When Is It NOT Needed?
+
+Implementing RYOW everywhere adds complexity and load to your primary database. You can safely skip it when data freshness doesn't impact the immediate user who is acting.
+
+* **Public Feeds / Timelines**: If User A posts a photo, it doesn't matter if User B sees it 500 milliseconds later. User B has no expectation of exactly when User A's data should arrive.
+* **Analytics and Dashboards**: High-level metrics, view counts, or admin analytics reports do not need real-time accuracy. A 30-second delay is perfectly acceptable.
+* **System Logs & Background Jobs**: Internal audit logs or automated background tasks do not interact with a waiting user interface.
+
+### How is it implemented ? (code execution)
+
+There are three common ways to implement RYOW consistency in production systems, ranging from simple to highly optimized.
+
+#### 1. The Time-Window Router (The Simple/Pragmatic Way)
+
+When a user executes a write operation, the backend tracking system places a "temporary block" on that user's ID using a fast in-memory store like Redis.
+
+* **How it works**:
+  1. User updates their profile.
+  2. Backend handles the write on the Primary DB and sets a key in Redis: `user:123:recent_write = true` with a Time-To-Live (TTL) of 5 seconds.
+  3. For the next 5 seconds, any incoming read requests from User 123 check Redis. Because the key exists, the router forces the query to go directly to the Primary DB.
+  4. After 5 seconds, the key expires, and the router safely falls back to routing User 123's reads to the Read Replicas.
+
+#### 2. Version / Log Sequence Number (LSN) Tracking (The Elegant Way)
+
+Instead of guessing with a timer, you track the exact database state.
+
+* **How it works**:
+  1. When the Primary DB accepts a write, it returns a transaction ID, timestamp, or Log Sequence Number (e.g., LSN: 50023).
+  2. The backend sends this token back to the client (or stores it in the user's session cookie).
+  3. When the user makes a read request, they pass `LSN: 50023` along.
+  4. The database router looks at the read replicas. It asks: "Have you synced up to LSN 50023 yet?"
+  5. If Replica A says "Yes," the read goes to Replica A. If Replica B says "No, I'm only at 50021," the router avoids Replica B or falls back to the Primary.
+
+#### 3. Contextual/UI Mocking (The Frontend Trick)
+
+Sometimes the best backend solution is a clever frontend illusion called Optimistic UI.
+
+* **How it works**:
+  1. When a user adds a comment, JavaScript immediately injects that comment into the UI before the server even responds.
+  2. If the API request succeeds, the UI stays as-is. If the API fails, the UI rolls back and shows an error.
+  3. Because the frontend keeps a local state of what the user just did, it doesn't matter if the subsequent background read API hits a stale replica—the frontend ignores the stale data until it knows a safe amount of time has passed.
