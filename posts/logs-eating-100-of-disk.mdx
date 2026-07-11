@@ -1,0 +1,82 @@
+---
+source: hashnode
+title: "💥 I killed my disk due to simple console logs (and how you can avoid this)"
+date: "2024-07-06"
+description: "How noisy logging pods can cause kubelet to evict healthy applications, and how to stop it from happening in your cluster."
+readTime: 6
+---
+
+# Logs eating 100% of disk
+
+This is a classic node-level failure mode: containers write logs to stdout/stderr, kubelet captures them to disk on the node (typically `/var/log/containers/` and `/var/log/pods/`, symlinked from `/var/lib/docker/containers/` or containerd equivalent), and if nothing rotates or caps them, they fill the node's disk.
+
+### Why this is dangerous beyond "disk is full"
+
+When node disk pressure hits a threshold, kubelet triggers eviction — it starts killing pods to reclaim space, starting with BestEffort QoS pods (see the QoS discussion earlier), even if those pods have nothing to do with the log growth. A noisy logging pod can cause kubelet to evict unrelated, healthy, important pods on the same node.
+
+```bash
+kubectl describe node <node-name>
+# Conditions: DiskPressure: True
+```
+
+If disk pressure gets bad enough, even the container runtime and kubelet itself can become unstable — you get a node in NotReady state, and now everything scheduled there is affected, not just the noisy app.
+
+### Common causes
+
+**1. No log rotation configured on the node**
+Container runtimes (containerd/CRI-O) usually have log rotation built in, but it needs to be configured — default settings vary by distro/managed-K8s provider.
+
+**2. App logging way too verbosely**
+
+```python
+# BAD — logs every single request body at INFO level in prod
+logger.info(f"Received request: {full_request_payload}")
+
+# BETTER — gate verbose logging behind DEBUG, off by default in prod
+logger.debug(f"Request payload: {full_request_payload}")
+```
+
+A single misbehaving pod logging in a tight loop (e.g., retry storm logging every failed attempt) can generate gigabytes in minutes.
+
+**3. No centralized log shipping**
+
+If logs only live on local node disk with no shipping to an external system (ELK, Loki, CloudWatch, etc.), you have no way to cap retention except local rotation — and no easy way to investigate after the node is reclaimed/evicted anyway.
+
+---
+
+### Fixes, in priority order
+
+a. Set resource-based log limits at the container runtime level (as above) — this is the actual backstop, independent of app behavior.
+
+b. Ship logs off-node immediately — a DaemonSet running Fluent Bit / Vector / Promtail reads container logs and ships them to Loki/Elasticsearch, so local disk only needs to hold a small rotating buffer, not your full log history.
+
+```bash
+# Conceptual: DaemonSet runs on every node, tails /var/log/containers/*.log
+# and ships to centralized store — this is the standard pattern
+```
+
+c. Structured logging + log levels enforced in app config — so you can turn down verbosity via a ConfigMap/env var without redeploying code.
+
+d. Set ephemeral-storage requests/limits on pods — this is the Kubernetes-native way to cap how much local disk (including logs, if not shipped) a single pod can consume before it gets evicted for exceeding its own limit, rather than taking the whole node down.
+
+```yaml
+resources:
+  requests:
+    ephemeral-storage: "1Gi"
+  limits:
+    ephemeral-storage: "2Gi"
+```
+
+---
+
+### A Few Brutal Edge Cases (Because It Always Gets Worse)
+
+Logs taking down a node sounds simple, but in the wild, it usually happens in the most chaotic way possible. Here are two nightmares I've personally debugged:
+
+**The "Infinite Retry" Black Hole**
+Once, a downstream payment provider went down for maintenance. Our app was configured to retry failed network requests. The problem? It didn't have exponential backoff, and it logged the entire error stack trace on every failure. A single pod entered a tight loop, making thousands of requests a second, failing instantly, and logging a 50-line stack trace each time. It generated 40GB of logs in about eight minutes. The node panicked, evicted everything (including our core Redis cache pod that happened to live there), and caused a massive cascading failure. 
+*The fix:* Always, always implement exponential backoff on retries, and never log full stack traces in a tight retry loop!
+
+**The "Accidental Database Dump" Log**
+I once saw a developer try to log a user's profile ID during a background job. Unfortunately, due to an ORM quirk, `logger.info(user)` didn't just log the ID or a short string representation—it eagerly fetched and serialized the *entire user object*, including their heavily nested relational data and a massive stringified JSON blob of their historical preferences. When a cron job ran to process 50,000 users, the logger dumped terabytes of JSON to `stdout`. The node disk filled up instantly. 
+*The fix:* Use structured logging and explicitly pick the fields you want to log (e.g., `logger.info({"user_id": user.id})`). Never pass raw objects directly to a logger in production.

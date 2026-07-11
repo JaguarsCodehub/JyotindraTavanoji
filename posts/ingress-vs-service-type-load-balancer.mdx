@@ -1,0 +1,84 @@
+---
+source: hashnode
+title: "⚖️ Ingress vs Service Type LoadBalancer: Which Do You Need and why?"
+date: "2024-07-07"
+description: "Understanding how to route external traffic into your Kubernetes cluster, and why paying for a load balancer per service is a terrible idea."
+readTime: 5
+coverImage: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=1000"
+---
+
+# Ingress vs service type load balancer
+
+### Service type LoadBalancer
+
+Provisions one cloud load balancer per Service. Direct L4 (TCP/UDP) routing — no HTTP awareness.
+
+```yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: backend-svc
+spec:
+  type: LoadBalancer
+  selector:
+    app: backend
+  ports:
+  - port: 80
+    targetPort: 8080
+```
+
+Cloud provider (AWS/GCP/Azure) spins up a real external LB, assigns a public IP. Fine for one service, but if you have 10 services needing external access, that's 10 cloud load balancers — expensive, and each only does basic TCP forwarding, no path-based routing.
+
+### Ingress
+
+A single entry point (usually one LoadBalancer Service backing an Ingress Controller like NGINX or Traefik) that does L7 (HTTP) routing to multiple Services based on host/path.
+
+```yaml
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: backend-ingress
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: api.yourapp.com
+    http:
+      paths:
+      - path: /orders
+        pathType: Prefix
+        backend:
+          service:
+            name: orders-svc
+            port:
+              number: 80
+      - path: /users
+        pathType: Prefix
+        backend:
+          service:
+            name: users-svc
+            port:
+              number: 80
+```
+
+One external IP, one LB, routes `/orders` and `/users` to different backend Services based on path. You also get TLS termination, host-based routing (`api.yourapp.com` vs `admin.yourapp.com`), and rewrite rules — none of which plain LoadBalancer gives you.
+
+### When to use which
+
+- **LoadBalancer:** for a single exposed TCP service (e.g., a raw Kafka broker, a gRPC service that doesn't need path routing) or for the Ingress Controller itself (which then fronts everything else). 
+- **Ingress:** for any HTTP(S) app-layer traffic, especially with multiple services — which is basically always for a typical backend API setup like yours.
+
+---
+
+### The Reality Check: Edge Cases from the Trenches
+
+The "Ingress vs LoadBalancer" debate seems straightforward until you actually have to deploy complex apps. Here are a couple of situations where the "obvious" choice completely backfired on me.
+
+**The WebSocket Heartbreak**
+We were building a real-time chat feature. Naturally, I routed the traffic through our trusty NGINX Ingress controller because that's what you do for HTTP-based traffic (WebSockets start as an HTTP upgrade). But connections kept randomly dropping every 60 seconds. It turned out the Ingress controller had aggressive default timeouts to protect against slowloris attacks. Tweaking the annotations to support long-lived WebSocket connections across multiple paths became an absolute configuration nightmare. We eventually gave up, spun up a dedicated Service of type `LoadBalancer` just for the WebSocket servers, and it worked flawlessly via pure TCP forwarding. 
+*The lesson:* Ingress controllers are deeply opinionated about HTTP traffic. If you're doing something weird or persistent (like WebSockets or heavy video streaming), a dumb, reliable Layer 4 LoadBalancer might save your sanity.
+
+**The "Rewrite-Target" Black Hole**
+Look closely at the Ingress YAML example above—see that `rewrite-target: /` annotation? I once copy-pasted a similar snippet into production. I meant to route `api.myapp.com/users` to the users service. But because of that rewrite annotation, a request to `/users/profile/123` was getting rewritten and sent to the backend as just `/profile/123` (stripping the `/users` prefix). The backend had no idea what `/profile/123` was and returned a 404. I spent three hours staring at backend logs, absolutely bewildered as to why my API routes were spontaneously failing. 
+*The lesson:* Ingress controllers are powerful, but their annotations are basically magic spells. One wrong character, and you're quietly rewriting every single URL in your system to nowhere. Always test path rewrites locally first!

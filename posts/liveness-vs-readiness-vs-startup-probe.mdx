@@ -1,0 +1,75 @@
+---
+source: hashnode
+title: "🚦 liveness vs readiness vs startup Probe: The Three Probes Explained"
+date: "2024-07-03"
+description: "Understanding Kubernetes probes: liveness, readiness, and startup. When to use each to keep your pods healthy and avoid restart loops."
+readTime: 4
+---
+
+# Liveness vs readiness vs startup probe: The three probes
+
+### Liveness probe — "Is this container alive or should it be killed?"
+
+* If it fails, kubelet kills the container and restarts it (per `restartPolicy`)
+* **Use for:** detecting deadlocks, hung threads, unrecoverable states
+* **Danger:** too aggressive → crash loops on slow but healthy pods
+
+### Readiness probe — "Should this pod receive traffic right now?"
+
+* If it fails, the pod is removed from the Service's endpoints (no restart)
+* **Use for:** temporary unavailability — DB connection pool warming up, downstream dependency down, overloaded and shedding load
+* Pod stays alive, just stops getting requests until it passes again
+
+### Startup probe — "Has the app finished booting?"
+
+* Disables liveness/readiness checks until this succeeds
+* **Use for:** slow-starting apps (JVM apps, apps loading large caches) where you don't want liveness killing the pod mid-boot
+* Once it succeeds once, it's never checked again — liveness/readiness take over
+
+### Why startup probe exists
+
+Before it existed, people set liveness `initialDelaySeconds` really high to accommodate slow boots — but that meant a genuinely hung container also took forever to get killed. Startup probe decouples "give it time to boot" from "how fast do we detect hangs after boot."
+
+```yaml
+# Startup: gives the app time to boot before liveness/readiness kick in.
+        startupProbe:
+          httpGet:
+            path: /healthz
+            port: 8080
+          periodSeconds: 3
+          failureThreshold: 10   # up to 30s to start
+
+        # Liveness: cheap check only, no dependency calls.
+        livenessProbe:
+          httpGet:
+            path: /healthz
+            port: 8080
+          periodSeconds: 10
+          timeoutSeconds: 2
+          failureThreshold: 3
+
+        # Readiness: checks the fake dependency, flips via /chaos/dep-down.
+        readinessProbe:
+          httpGet:
+            path: /ready
+            port: 8080
+          periodSeconds: 5
+          timeoutSeconds: 2
+          failureThreshold: 2
+```
+
+---
+
+### A Few Sneaky Edge Cases (Because Production is Chaos)
+
+Let's be real, you can follow all the "best practices," and Kubernetes will still find a way to humble you (I have experienced this personally in production). Here are a couple of weird edge cases I've run into in the wild.
+
+**The "Flapping" Readiness Trap**
+Imagine your app is getting hammered with traffic. CPU usage spikes, and the `/ready` endpoint takes just a bit too long to respond, so it fails its readiness check. Kubernetes helpfully removes the pod from the Service. Because the pod is no longer getting traffic, it suddenly has plenty of resources! The next readiness check passes with flying colors, and it gets thrown right back into the Service—only to get slammed with traffic and fail again. We call this "flapping," and it's awful. 
+
+*The fix:* If your app is prone to this, you might need to decouple readiness from CPU load, or use more sophisticated traffic shaping (like rate limiting or circuit breakers) instead of relying solely on readiness probes to shed load.
+
+**The "Deadlocked" Liveness Illusion**
+Once, we had a Python worker pod that pulled jobs from a queue. We added a nice little `/healthz` HTTP server running on a separate thread to act as a liveness probe. It returned `200 OK` reliably. But guess what? The *actual* queue-processing thread had silently deadlocked. The liveness probe was happily reporting the container was healthy, while the main workload was completely frozen.
+
+*The fix:* Make sure your liveness probe actually verifies the core loop of your application. If your app processes queues, maybe check if the "last processed job" timestamp is reasonably recent!

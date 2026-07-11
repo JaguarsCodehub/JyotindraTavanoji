@@ -1,0 +1,76 @@
+---
+source: hashnode
+title: "🔁 I spent a whole day debugging my k8s pod when real issue was a bad /healthz check"
+date: "2024-07-05"
+description: "A real production failure pattern: how poorly configured health checks can cause cascading restart loops across your entire fleet."
+readTime: 5
+---
+
+# Health checks causing restart loops
+
+This is a real production failure pattern, and it usually comes from one of these:
+
+### 1. Liveness probe checking downstream dependencies
+
+```python
+# BAD — liveness checks Postgres
+@app.get("/healthz")
+def healthz():
+    if not check_postgres_connection():
+        return Response(status_code=503)
+    return {"status": "ok"}
+```
+
+If Postgres (even your Patroni cluster) has a blip — leader election, network partition — every single pod's liveness probe fails simultaneously. kubelet kills all of them at once. Now you have zero pods running, all trying to restart together, all hitting the same DB that's still recovering → they fail startup too → CrashLoopBackOff across your entire fleet. This is the "self-inflicted outage" I mentioned — a downstream blip becomes a full outage because liveness amplified it into mass restarts.
+
+**Fix:** liveness only checks "is my process/event-loop alive." Dependency checks belong in readiness only.
+
+### 2. Probe timeout too tight for a busy pod
+
+```yaml
+livenessProbe:
+  httpGet:
+    path: /healthz
+    port: 8080
+  timeoutSeconds: 1      # too tight
+  periodSeconds: 5
+  failureThreshold: 1    # one slow response = dead
+```
+
+Under real load, your event loop might take 1.2s to respond to `/healthz` because it's busy serving actual requests — not because it's broken. `failureThreshold: 1` means one hiccup = restart. This creates a nasty spiral: pod gets busy → probe times out → gets killed → remaining pods take more load → they get busy too → they get killed → cascading restarts.
+
+**Fix:** `failureThreshold: 3+` and reasonable `timeoutSeconds` (2-3s), so a single slow tick doesn't trigger a kill.
+
+### 3. No startup probe on a slow-booting app
+
+If your app takes 40s to boot (loading models, warming caches) but liveness `initialDelaySeconds` is 10s with `periodSeconds: 10`, `failureThreshold: 3` — liveness starts checking at 10s, fails 3 times by 40s, kills the container while it's still booting. It restarts, takes 40s again, gets killed again. Infinite crash loop, app never actually finishes starting.
+
+**Fix:** always pair slow-starting apps with a startup probe with generous `failureThreshold`.
+
+### 4. Resource limits too tight → OOMKill mid-check
+
+If your memory limit is too low and the app briefly spikes (e.g., loading a batch), it gets OOMKilled — which looks like a "restart loop" but is actually a resource problem, not a probe config problem. Check `kubectl describe pod` for OOMKilled in the last state before assuming it's a probe issue.
+
+### How to diagnose in practice
+
+```bash
+kubectl describe pod <pod-name>
+# Look at: Last State, Reason (OOMKilled vs Error), Restart Count, Events section
+kubectl logs <pod-name> --previous   # logs from the crashed instance
+```
+
+---
+
+### The Weird Stuff: When It's Not Your App's Fault
+
+Sometimes, you stare at the logs, and everything seems fine, yet the pod is in a crash loop. These are the moments that make you question your life choices. Here are two edge cases I've stumbled across that usually aren't mentioned in the docs.
+
+**The "Too Many Open Files" Silent Killer**
+I once spent an entire afternoon debugging a service that kept restarting every few hours. The liveness probe was just failing out of nowhere. It turned out, the app had a tiny connection leak. Eventually, it hit the Linux limit for open file descriptors (`ulimit -n`). When the liveness probe's HTTP client tried to open a local socket to check `/healthz`, the OS denied it. No socket = probe failure = restart. 
+
+*Pro tip:* If your probes fail and you have no idea why, check your metrics for file descriptors or sockets in `TIME_WAIT`. It might just be an OS-level limit saving (or ruining) your day.
+
+**DNS Timeouts Acting Like App Failures**
+We had a service where the readiness probe occasionally did a quick sanity check that required resolving an internal cluster hostname. One day, CoreDNS got overloaded during a deployment surge. The DNS lookup took 5 seconds instead of 5 milliseconds. The readiness probe had a `timeoutSeconds` of 2. Bam. Half the cluster suddenly marked itself as "not ready" simply because DNS was being sluggish, even though the apps themselves were perfectly fine. 
+
+*Pro tip:* Keep your probes as self-contained as possible. If your probe needs to traverse the network or hit DNS, you're not just testing your app—you're testing the entire cluster infrastructure. And that's usually a bad idea!
